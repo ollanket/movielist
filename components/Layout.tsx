@@ -9,9 +9,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <Head>
         <title>Movie List</title>
       </Head>
-      <Navbar />
-      <main>{children}</main>
-      <Footer />
+      <div className="flex flex-col h-screen">
+        <Navbar />
+        <main className="flex-grow">{children}</main>
+        <Footer />
+      </div>
     </>
   );
 };
