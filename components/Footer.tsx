@@ -1,5 +1,4 @@
 import React from "react";
-import { IconType } from "react-icons/lib";
 import { MdFavorite, MdCoffee } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
 
