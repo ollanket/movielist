@@ -11,13 +11,13 @@ const Navbar = () => {
     <nav className="border border-teal-300 flex items-center p-3 rounded-b-md bg-teal-100 sticky top-0">
       <div className="flex items-center  w-full">
         <div className="flex underline text-teal-800 basis-1/4">
-          <Link href={data && data.user ? "/personal" : "/"}>
+          <Link href={data?.user ? "/personal" : "/"}>
             <a>
               <p className="font-semibold">Movielist</p>
             </a>
           </Link>
         </div>
-        {data && data.username !== undefined ? (
+        {data?.username ? (
           <DefaultLoggedIn username={data.username} />
         ) : (
           <Default />

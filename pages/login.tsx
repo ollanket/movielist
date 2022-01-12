@@ -2,8 +2,9 @@ import { FormEvent, useState } from "react";
 import Router from "next/router";
 import { useSWRConfig } from "swr";
 import Link from "next/link";
+import { NextPage } from "next";
 
-const Login = () => {
+const Login: NextPage = () => {
   const { mutate } = useSWRConfig();
   const [userData, setUserData] = useState({
     username: "",
@@ -33,7 +34,7 @@ const Login = () => {
       Router.push("/personal");
     } catch (error) {
       const { message } = error as Error;
-      setUserData({ ...userData, error: `${message}`, loading: false });
+      setUserData({ ...userData, error: message, loading: false });
     }
   };
 
