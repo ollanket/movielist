@@ -1,12 +1,17 @@
-import useSWR from "swr";
+import useSWR, { Fetcher } from "swr";
 
-export async function userFetcher(url: string) {
+interface userAuthData {
+  username?: string;
+  user: boolean;
+}
+
+const userFetcher: Fetcher<userAuthData, string> = async (url) => {
   const res = await fetch(url);
   if (res.status >= 300) {
     throw new Error("API error");
   }
   return res.json();
-}
+};
 
 export function useUser() {
   const { data, error } = useSWR("/api/getUser", userFetcher);
@@ -14,6 +19,5 @@ export function useUser() {
     data: data,
     isLoading: !error && !data,
     isError: error,
-    isUser: data && data.user,
   };
 }
