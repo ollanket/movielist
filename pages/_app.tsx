@@ -7,7 +7,7 @@ import { useEffect } from "react";
 function MyApp({ Component, pageProps }: AppProps) {
   const syncLogout = (event: StorageEvent) => {
     if (event.key === "logoutMovieList") {
-      Router.push("/login");
+      Router.push("/");
     }
   };
   useEffect(() => {

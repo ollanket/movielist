@@ -29,5 +29,5 @@ export const logout = async () => {
 
   window.localStorage.setItem("logoutMovieList", `${Date.now()}`);
 
-  Router.push("/login");
+  Router.push("/");
 };

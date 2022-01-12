@@ -12,7 +12,7 @@ const signin = async (username: string, password: string) => {
   if (response.status !== 200) {
     throw new Error(await response.text());
   }
-  Router.push("/");
+  Router.push("/personal");
 };
 
 function Login() {
@@ -31,7 +31,7 @@ function Login() {
 
     try {
       await signin(email, password);
-      mutate("/api/getCurrentUserName");
+      mutate("/api/getUser");
     } catch (error) {
       console.error(error);
       const { message } = error as Error;
