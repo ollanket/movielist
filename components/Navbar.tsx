@@ -1,4 +1,3 @@
-import useSWR from "swr";
 import Router, { useRouter } from "next/router";
 import { logout } from "../utils/auth";
 import { useSWRConfig } from "swr";
