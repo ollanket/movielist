@@ -3,37 +3,22 @@ import Router, { useRouter } from "next/router";
 import { logout } from "../utils/auth";
 import { useSWRConfig } from "swr";
 import Link from "next/link";
+import { userFetcher, useUser } from "../utils/fetchers";
 const Navbar = () => {
   // Who needs states when you got swr
-  const { data, error } = useSWR(
-    "/api/getCurrentUserName",
-    async (url: string) => {
-      const res = await fetch(url);
-      if (res.status >= 300) {
-        throw new Error("API error");
-      }
-      return res.json();
-    },
-    { revalidateOnFocus: false }
-  );
+  const { data, isUser } = useUser();
 
   return (
     <nav className="border border-teal-300 flex items-center p-3 rounded-b-md bg-teal-100 sticky top-0">
       <div className="flex items-center  w-full">
         <div className="flex underline text-teal-800 basis-1/4">
-          <Link href={"/"}>
+          <Link href={isUser ? "/personal" : "/"}>
             <a>
               <p className="font-semibold">Movielist</p>
             </a>
           </Link>
         </div>
-        {error ? (
-          <Default />
-        ) : data && data.user ? (
-          <DefaultLoggedIn username={data.username} />
-        ) : (
-          <Default />
-        )}
+        {isUser ? <DefaultLoggedIn username={data.username} /> : <Default />}
       </div>
     </nav>
   );
@@ -52,7 +37,7 @@ const DefaultLoggedIn = ({ username }: { username: string }) => {
           className="text-md px-4 py-2 leading-none border rounded text-teal-500 bg-white border-teal-300 hover:border-transparent hover:text-white hover:bg-teal-700"
           onClick={async () => {
             await logout();
-            mutate("/api/getCurrentUserName");
+            mutate("/api/getUser");
           }}
         >
           Logout
