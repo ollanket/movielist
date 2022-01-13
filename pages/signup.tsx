@@ -1,118 +1,136 @@
-// import type { NextPage } from "next";
-
-// const Signup: NextPage = () => {
-//   return (
-//     <div>
-//       <span>Helloworld</span>
-//     </div>
-//   );
-// };
-
-// export default Signup;
-
-import { useState } from "react";
+import { NextPage } from "next";
+import Link from "next/link";
 import Router from "next/router";
+import { FormEvent, useState } from "react";
 
-function Signup() {
+const Signup: NextPage = () => {
   const [userData, setUserData] = useState({
-    email: "",
+    username: "",
     password: "",
+    retyped: "",
     error: "",
+    loading: false,
   });
 
-  async function handleSubmit(event: any) {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setUserData({ ...userData, error: "" });
+    setUserData({ ...userData, error: "", loading: true });
 
-    const username = userData.email;
-    const password = userData.password;
+    const { username, password, retyped } = userData;
 
     try {
-      const response = await fetch("/api/signup", {
+      if (password !== retyped) {
+        throw new Error("passwords dont match");
+      }
+      // TODO: input validation.
+      const res = await fetch("api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
 
-      const json = await response.json();
-
-      if (response.status !== 200) {
-        throw new Error(json.error);
+      if (res.status !== 200) {
+        throw new Error(await res.text());
       }
-
-      console.log(json);
-      Router.push("/");
+      Router.push("/login");
     } catch (error) {
-      console.error(error);
       const { message } = error as Error;
-      setUserData({ ...userData, error: message });
+      setUserData({ ...userData, error: message, loading: false });
     }
-  }
+  };
 
   return (
-    <>
-      <div className="signup">
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="email">Email</label>
-
-          <input
-            type="text"
-            id="email"
-            name="email"
-            value={userData.email}
-            onChange={(event) =>
-              setUserData(
-                Object.assign({}, userData, { email: event.target.value })
-              )
-            }
-          />
-
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={userData.password}
-            onChange={(event) =>
-              setUserData(
-                Object.assign({}, userData, { password: event.target.value })
-              )
-            }
-          />
-
-          <button type="submit">Sign up</button>
-
-          {userData.error && <p className="error">Error: {userData.error}</p>}
+    <div className="flex flex-grow h-full w-full items-center justify-center flex-col ">
+      <div className="flex flex-col mb-48">
+        <div className="bg-teal-100 pt-3 pb-3 rounded-t-md border border-gray-100 text-center shadow-md ">
+          <h1 className=" text-teal-800 font-semibold">Sign Up</h1>
+        </div>
+        <form
+          className=" bg-white rounded px-12 pt-10 pb-12 shadow-md"
+          onSubmit={handleSubmit}
+        >
+          <div className=" mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="username"
+            >
+              Username
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-teal-300 focus:ring-1 focus:ring-teal-500"
+              id="username"
+              type="text"
+              placeholder="Username"
+              onChange={(e) =>
+                setUserData(
+                  Object.assign({}, userData, { username: e.target.value })
+                )
+              }
+            ></input>
+          </div>
+          <div>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-teal-300 focus:ring-1 focus:ring-teal-500 mb-3"
+              id="password"
+              type="password"
+              placeholder="*************"
+              onChange={(e) =>
+                setUserData(
+                  Object.assign({}, userData, { password: e.target.value })
+                )
+              }
+            ></input>
+          </div>
+          <div className=" mb-6">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="retype"
+            >
+              Retype Password
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-teal-300 focus:ring-1 focus:ring-teal-500 mb-3"
+              id="retype"
+              type="password"
+              placeholder="*************"
+              onChange={(e) =>
+                setUserData(
+                  Object.assign({}, userData, { retyped: e.target.value })
+                )
+              }
+            ></input>
+            <p className={`text-red-500 text-xs italic h-1 tracking-tight`}>
+              {userData.error}
+            </p>
+          </div>
+          <div className="flex items-center justify-between">
+            <button
+              className="bg-teal-100 text-teal-700 hover:bg-teal-200 hover:text-teal-800 focus:outline-none focus:shadow-outline py-2 px-4 rounded font-semibold "
+              type="submit"
+            >
+              Sign Up
+            </button>
+            {userData.loading && (
+              <div
+                className={`w-4 h-4 border-b-2 border-teal-700 rounded-full animate-spin`}
+              ></div>
+            )}
+            <Link href={"/login"}>
+              <a className="text-teal-700 hover:text-teal-900 text-sm">
+                Already signed up?
+              </a>
+            </Link>
+          </div>
         </form>
       </div>
-      <style jsx>{`
-        .signup {
-          max-width: 340px;
-          margin: 0 auto;
-          padding: 1rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        form {
-          display: flex;
-          flex-flow: column;
-        }
-        label {
-          font-weight: 600;
-        }
-        input {
-          padding: 8px;
-          margin: 0.3rem 0 1rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        .error {
-          margin: 0.5rem 0 0;
-          color: brown;
-        }
-      `}</style>
-    </>
+    </div>
   );
-}
+};
 
 export default Signup;
