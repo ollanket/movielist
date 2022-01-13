@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Link from "next/link";
 import TextLink from "../components/TextLink";
 
 const Home: NextPage = () => {
@@ -20,7 +19,7 @@ const Home: NextPage = () => {
         />
         <TextLink
           href="/login"
-          heading="login"
+          heading="Login"
           paragraph="Login using your username and password"
         />
         <TextLink
