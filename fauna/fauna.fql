@@ -45,7 +45,7 @@ CreateFunction({
   role: server,
   body: Query(
     Lambda(
-      ["title", "score", "year", "rating", "note", "poster"], 
+      ["title", "score", "year", "rating", "note", "poster"],
       Create(Collection("movies"), {
         data: {
           title: Var("title"),
@@ -110,23 +110,68 @@ CreateFunction({
   name: "deleteEntry",
   role: server,
   body: Query(
-    Lambda(
-      "movieId",
-      Let(
-        { movieRef: Ref(Collection('movies'), Var("movieId"),
-          movieData: Select('data', Get(Var("movieRef"))),
-          movieOwnerRef: Select('owner', Var("movieData"))
-         },
-        If(Equals(Var("movieOwnerRef"), CurrentIdentity()), Delete(Var("movieRef")),Abort("Not your entry"))
+  Lambda(
+    "movieId",
+    Let(
+      {
+        movieRef: Ref(Collection("movies"), Var("movieId")),
+        movieData: Select("data", Get(Var("movieRef"))),
+        movieOwnerRef: Select("owner", Var("movieData"))
+      },
+      If(
+        Equals(Var("movieOwnerRef"), CurrentIdentity()),
+        Delete(Var("movieRef")),
+        Abort("Not your entry")
       )
     )
   )
+)
 })
 
 
-// TODO: 
-// Update list entry (score, notes)
+// Update list entry score
+CreateFunction({
+  name: "updateScore",
+  role: "server",
+  body: Query(
+  Lambda(
+    ["score", "movieId"],
+    Let(
+      {
+        movieRef: Ref(Collection("movies"), Var("movieId")),
+        movieData: Select("data", Get(Var("movieRef"))),
+        movieOwnerRef: Select("owner", Var("movieData"))
+      },
+      If(
+        Equals(Var("movieOwnerRef"), CurrentIdentity()),
+        Update(Var("movieRef"), { data: { score: Var("score") } }),
+        Abort("Not your entry")
+      )
+    )
+  )
+)
+})
 
+// Update notes
 
-
-
+CreateFunction({
+  name: "updateNotes",
+  role: "server",
+  body: Query(
+  Lambda(
+    ["note", "movieId"],
+    Let(
+      {
+        movieRef: Ref(Collection("movies"), Var("movieId")),
+        movieData: Select("data", Get(Var("movieRef"))),
+        movieOwnerRef: Select("owner", Var("movieData"))
+      },
+      If(
+        Equals(Var("movieOwnerRef"), CurrentIdentity()),
+        Update(Var("movieRef"), { data: { note: Var("note") } }),
+        Abort("Not your entry")
+      )
+    )
+  )
+)
+})
