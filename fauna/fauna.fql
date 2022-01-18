@@ -101,10 +101,6 @@ CreateFunction({
 )
 })
 
-
-
-
-
 // Remove list entry.
 CreateFunction({
   name: "deleteEntry",
@@ -153,7 +149,6 @@ CreateFunction({
 })
 
 // Update notes
-
 CreateFunction({
   name: "updateNotes",
   role: "server",

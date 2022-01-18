@@ -1,9 +1,5 @@
 import useSWR, { Fetcher } from "swr";
-
-interface userAuthData {
-  username?: string;
-  user: boolean;
-}
+import { userAuthData } from "../types/types";
 
 const userFetcher: Fetcher<userAuthData, string> = async (url) => {
   const res = await fetch(url);

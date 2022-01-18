@@ -11,12 +11,12 @@ const Personal: NextPage = () => {
         Welcome to the movielist demo site!
       </h1>
       <p className=" mt-3 text-2xl text-teal-700">
-        {data && data.user ? `greetings, ${data.username}` : `greetings, `}
+        {data?.user ? `greetings, ${data.username}` : `greetings, `}
       </p>
 
       <div className="flex flex-col items-center justify-around max-w-4xl mt-6 sm:w-full">
         <TextLink
-          href={data && data.user ? "/login" : "/"}
+          href={data?.user ? `list/${data.username}` : "/"}
           heading="Your list"
           paragraph="Checkout your list"
         />
