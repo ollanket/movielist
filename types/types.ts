@@ -41,5 +41,6 @@ export enum scoreDesc {
   "Bad" = 4,
   "Very Bad" = 3,
   "Horrible" = 2,
-  "Appaling" = 1
+  "Appaling" = 1,
+  "N/A" = 0
 }
