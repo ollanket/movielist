@@ -9,7 +9,7 @@ const Signup: NextPage = () => {
     password: "",
     retyped: "",
     error: "",
-    loading: false,
+    loading: false
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -26,11 +26,15 @@ const Signup: NextPage = () => {
       const res = await fetch("api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password })
       });
 
       if (res.status !== 200) {
-        throw new Error(await res.text());
+        const { message } = await res.json();
+        console.log(res.status);
+        throw new Error(
+          message === "instance not unique" ? "username taken" : message
+        );
       }
       Router.push("/login");
     } catch (error) {

@@ -1,6 +1,7 @@
 import { query as q } from "faunadb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { serverClient } from "../../utils/auth";
+import { errorHandler } from "../../utils/error-handling";
 
 export default async function signup(
   req: NextApiRequest,
@@ -16,7 +17,7 @@ export default async function signup(
     const { ref }: { ref: object | undefined } = await serverClient.query(
       q.Create(q.Collection("users"), {
         credentials: { password },
-        data: { username },
+        data: { username }
       })
     );
 
@@ -26,13 +27,9 @@ export default async function signup(
 
     res.status(200).json({
       succesful: true,
-      ts: `${+new Date()}`,
+      ts: `${+new Date()}`
     });
   } catch (error) {
-    let message = "Unspecified error";
-    if (error instanceof Error) {
-      message = error.message;
-    }
-    res.status(400).send(message);
+    errorHandler(error, res);
   }
 }

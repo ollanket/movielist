@@ -10,7 +10,7 @@ const Login: NextPage = () => {
     username: "",
     password: "",
     error: "",
-    loading: false,
+    loading: false
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -24,11 +24,12 @@ const Login: NextPage = () => {
       const res = await fetch("api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password })
       });
 
       if (res.status !== 200) {
-        throw new Error(await res.text());
+        const { message } = await res.json();
+        throw new Error(message);
       }
       mutate("/api/getUser");
       Router.push("/personal");

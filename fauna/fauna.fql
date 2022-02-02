@@ -11,11 +11,66 @@ CreateIndex({
 
 CreateCollection({ name: "movies"});
 
+// Indexes for sorting purposes
+// sorting needs to be done db side incase of pagination
 CreateIndex({
-  name: "movies_by_owner",
+  name: "movies_by_user_sort_by_title_asc",
   source: Collection("movies"),
-  terms: [{field: ["data", "owner"]}],
-  serialized: true,
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "title"] },
+    { field: ["ref"] }
+  ]
+})
+
+CreateIndex({
+  name: "movies_by_user_sort_by_title_desc",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "title"], reverse: true },
+    { field: ["ref"] }
+  ]
+})
+
+CreateIndex({
+  name: "movies_by_user_sort_by_score_asc",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "score"] },
+    { field: ["ref"] }
+  ]
+})
+
+CreateIndex({
+  name: "movies_by_user_sort_by_score_desc",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "score"], reverse: true },
+    { field: ["ref"] }
+  ]
+})
+
+CreateIndex({
+  name: "movies_by_user_sort_by_year_asc",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "year"] },
+    { field: ["ref"] }
+  ]
+})
+
+CreateIndex({
+  name: "movies_by_user_sort_by_year_desc",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "year"], reverse: true },
+    { field: ["ref"] }
+  ]
 })
 
 // Makes addEntry udf throw if we add the same entry to a list.
@@ -42,19 +97,19 @@ CreateIndex({
 // called as user with server permissions.
 CreateFunction({
   name: "addEntry",
-  role: server,
+  role: "server",
   body: Query(
     Lambda(
       ["title", "score", "year", "rating", "note", "poster"],
       Create(Collection("movies"), {
         data: {
           title: Var("title"),
-          score: Var("score"),
+          score: ToInteger(Var("score")),
           year: Var("year"),
           rating: Var("rating"),
           note: Var("note"),
           poster: Var("poster"),
-          added: Now(), // format: 2019-10-02T19:34:56.789012Z
+          added: ToString(Now()), // format: 2019-10-02T19:34:56.789012Z
           owner: Identity() // ref to adder.
         }
       })
@@ -64,23 +119,24 @@ CreateFunction({
 
 // Get users movies, by username.
 // Called by server, can't be called by user.
+// takes username and index as paramas
 CreateFunction({
   name: "getList",
-  role: null,
+  role: "server",
   body: Query(
   Lambda(
-    "username",
+    ["username", "index"],
     Let(
       {
         user: Get(Match(Index("users_by_username"), Var("username"))),
         userRef: Select("ref", Var("user"))
       },
       Map(
-        Paginate(Match(Index("movies_by_owner"), Var("userRef")), {
-          size: 500
+        Paginate(Match(Index(Var("index")), Var("userRef")), {
+          size: 100
         }),
         Lambda(
-          "ref",
+          ["first","ref"],
           Let(
             { data: Select("data", Get(Var("ref"))) },
             {
@@ -104,7 +160,7 @@ CreateFunction({
 // Remove list entry.
 CreateFunction({
   name: "deleteEntry",
-  role: server,
+  role: "server",
   body: Query(
   Lambda(
     "movieId",

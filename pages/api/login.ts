@@ -1,6 +1,9 @@
 import { query as q } from "faunadb";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 import { serverClient, serializeCookie } from "../../utils/auth";
+import { errorHandler } from "../../utils/error-handling";
+import HttpError from "../../utils/http-error";
 
 export default async function signup(
   req: NextApiRequest,
@@ -15,21 +18,17 @@ export default async function signup(
 
     const { secret }: { secret: string | undefined } = await serverClient.query(
       q.Login(q.Match(q.Index("users_by_username"), username), {
-        password,
+        password
       })
     );
 
     if (secret === undefined) {
-      throw new Error("No secret");
+      throw new HttpError(ReasonPhrases.UNAUTHORIZED, StatusCodes.UNAUTHORIZED);
     }
 
     res.setHeader("Set-Cookie", serializeCookie(secret));
     res.status(200).end();
   } catch (error) {
-    let message = "Unspecified error";
-    if (error instanceof Error) {
-      message = error.message;
-    }
-    res.status(400).send(message);
+    errorHandler(error, res);
   }
 }
