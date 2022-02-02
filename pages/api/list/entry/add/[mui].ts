@@ -3,11 +3,11 @@ import Joi from "joi";
 import { query as q } from "faunadb";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import validate from "../../../../lib/middlewares/validation";
-import { faunaClient, getSecret } from "../../../../utils/auth";
-import { errorHandler } from "../../../../utils/error-handling";
-import HttpError from "../../../../utils/http-error";
-import { listEntry } from "../../../../types/types";
+import validate from "../../../../../lib/middlewares/validation";
+import { faunaClient, getSecret } from "../../../../../utils/auth";
+import { errorHandler } from "../../../../../utils/error-handling";
+import HttpError from "../../../../../utils/http-error";
+import { listEntry } from "../../../../../types/types";
 
 const schema = Joi.object({
   title: Joi.string().required(),
