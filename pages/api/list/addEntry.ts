@@ -8,6 +8,7 @@ import validate from "../../../lib/middlewares/validation";
 import { faunaClient, FAUNA_SECRET_COOKIE } from "../../../utils/auth";
 import { errorHandler } from "../../../utils/error-handling";
 import HttpError from "../../../utils/http-error";
+import { listEntry } from "../../../types/types";
 
 const schema = Joi.object({
   title: Joi.string().required(),
@@ -35,7 +36,7 @@ export default validate(
           StatusCodes.UNAUTHORIZED
         );
       }
-      const { title, score, year, note, poster } = req.body;
+      const { title, score, year, note, poster }: listEntry = await req.body;
       await faunaClient(faunaSecret).query(
         q.Call(q.Function("addEntry"), [title, score, year, note, poster])
       );
