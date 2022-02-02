@@ -1,14 +1,13 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import Joi from "joi";
-import cookie from "cookie";
 import { query as q } from "faunadb";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import validate from "../../../lib/middlewares/validation";
-import { faunaClient, FAUNA_SECRET_COOKIE } from "../../../utils/auth";
-import { errorHandler } from "../../../utils/error-handling";
-import HttpError from "../../../utils/http-error";
-import { listEntry } from "../../../types/types";
+import validate from "../../../../lib/middlewares/validation";
+import { faunaClient, getSecret } from "../../../../utils/auth";
+import { errorHandler } from "../../../../utils/error-handling";
+import HttpError from "../../../../utils/http-error";
+import { listEntry } from "../../../../types/types";
 
 const schema = Joi.object({
   title: Joi.string().required(),
@@ -28,14 +27,7 @@ export default validate(
           StatusCodes.METHOD_NOT_ALLOWED
         );
       }
-      const cookies = cookie.parse(req.headers.cookie ?? "");
-      const faunaSecret = cookies[FAUNA_SECRET_COOKIE];
-      if (!faunaSecret) {
-        throw new HttpError(
-          ReasonPhrases.UNAUTHORIZED,
-          StatusCodes.UNAUTHORIZED
-        );
-      }
+      const faunaSecret = await getSecret(req);
       const { title, score, year, note, poster }: listEntry = await req.body;
       await faunaClient(faunaSecret).query(
         q.Call(q.Function("addEntry"), [title, score, year, note, poster])

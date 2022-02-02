@@ -19,7 +19,6 @@ export default async function getList(
         StatusCodes.METHOD_NOT_ALLOWED
       );
     }
-
     const {
       data,
       after
