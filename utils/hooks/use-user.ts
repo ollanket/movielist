@@ -1,5 +1,5 @@
 import useSWR, { Fetcher } from "swr";
-import { userAuthData } from "../types/types";
+import { userAuthData } from "../../types/types";
 
 const userFetcher: Fetcher<userAuthData, string> = async (url) => {
   const res = await fetch(url);

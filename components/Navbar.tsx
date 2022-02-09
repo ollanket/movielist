@@ -2,9 +2,8 @@ import Router, { useRouter } from "next/router";
 import { logout } from "../utils/auth";
 import { useSWRConfig } from "swr";
 import Link from "next/link";
-import { useUser } from "../utils/fetchers";
+import { useUser } from "../utils/hooks/use-user";
 const Navbar = () => {
-  // Who needs states when you got swr
   const { data } = useUser();
 
   return (

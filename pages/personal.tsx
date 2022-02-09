@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import { useUser } from "../utils/fetchers";
+import { useUser } from "../utils/hooks/use-user";
 import TextLink from "../components/TextLink";
 
 const Personal: NextPage = () => {

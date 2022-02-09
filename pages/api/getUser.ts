@@ -19,7 +19,6 @@ export default async function getCurrentUserName(
       faunaSecret
     ).query(q.Get(q.CurrentIdentity()));
 
-    console.log("asd");
     res.status(200).json({ username: data.username, user: true });
   } catch (error) {
     let message = "Unspecified error";

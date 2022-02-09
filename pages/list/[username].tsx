@@ -1,29 +1,28 @@
 import {
   NextPage,
   GetServerSideProps,
-  InferGetServerSidePropsType,
+  InferGetServerSidePropsType
 } from "next";
-import React from "react";
+import React, { useState } from "react";
 import { serverClient } from "../../utils/auth";
 import { query as q } from "faunadb";
-
-interface listEntry {
-  title: string;
-  id: string;
-  score: string;
-  poster: string;
-  year: string;
-  rating: string;
-  notes: string;
-}
+import { listEntry } from "../../types/types";
+import Search from "../../components/list/Search";
+import EntryList from "../../components/list/EntryList";
+import { useUser } from "../../utils/hooks/use-user";
+import { useHttpClient } from "../../utils/hooks/http-hook";
 
 const List: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ list, username }) => {
+  const { data } = useUser();
+  const [listState, SetListState] = useState(list);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   return (
     <div className="flex flex-col flex-grow bg-teal-200 h-full w-full justify-center items-center">
       <div className="flex flex-col flex-grow bg-teal-300 h-full w-full max-w-screen-sm sm:max-w-screen-lg">
-        asd
+        <Search controls={data?.username === username} />
+        <EntryList controls={data?.username === username} items={listState} />
       </div>
     </div>
   );
@@ -48,18 +47,19 @@ export const getServerSideProps: GetServerSideProps<{
       {
         title: "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
         id: "320674163978142281",
-        score: "10",
+        score: 10,
         poster:
           "https://m.media-amazon.com/images/M/MV5BMTc0NTUwMTU5OV5BMl5BanBnXkFtZTcwNjAwNzQzMw@@._V1_SX300.jpg",
         year: "2005",
         rating: "PG",
         notes: "Nice Movie!",
-      },
+        added: "221187-2-1"
+      }
     ];
 
     console.log(data);
     return {
-      props: { list: data, username: username },
+      props: { list: data, username: username }
     };
   } catch (error) {
     if (error instanceof Error) {

@@ -6,7 +6,7 @@ export interface listEntry {
   year: string;
   rating: string;
   added: string;
-  note: string;
+  notes: string;
 }
 
 export interface userAuthData {
@@ -43,4 +43,38 @@ export enum scoreDesc {
   "Horrible" = 2,
   "Appaling" = 1,
   "N/A" = 0
+}
+
+export interface OMDbSearchResponse {
+  Search: [{ Title: string; Year: string; imdbID: string; Poster: string }];
+  totalresults: string;
+  Response: "True";
+}
+
+export interface OMDbExactResponse {
+  Response: "True";
+  Error: string;
+  Title: string;
+  Year: string;
+  Rated: string;
+  Released: string;
+  Runtime: string;
+  Genre: string;
+  Director: string;
+  Writer: string;
+  Actors: string;
+  Plot: string;
+  Language: string;
+  Country: string;
+  Awards: string;
+  Poster: string;
+  Ratings: [{ Source: string; Value: string }];
+  Metascore: string;
+  imdbRating: string;
+  imdbVotes: string;
+  Type: string;
+  DVD: string;
+  BoxOffice: string;
+  Production: string;
+  Website: string;
 }
