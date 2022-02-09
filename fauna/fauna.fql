@@ -100,7 +100,7 @@ CreateFunction({
   role: "server",
   body: Query(
     Lambda(
-      ["title", "score", "year", "rating", "note", "poster"],
+      ["title", "score", "year", "rating", "note", "poster", "imdbId"],
       Create(Collection("movies"), {
         data: {
           title: Var("title"),
@@ -109,6 +109,7 @@ CreateFunction({
           rating: Var("rating"),
           note: Var("note"),
           poster: Var("poster"),
+          imdbId: Var("imdbId"),
           added: ToString(Now()), // format: 2019-10-02T19:34:56.789012Z
           owner: Identity() // ref to adder.
         }
@@ -146,6 +147,7 @@ CreateFunction({
               rating: Select("rating", Var("data")),
               note: Select("note", Var("data")),
               poster: Select("poster", Var("data")),
+              imdbId: Select("imdbId", Var("data")),
               added: Select("added", Var("data")),
               id: Select("id", Var("ref"))
             }
