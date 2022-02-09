@@ -1,3 +1,4 @@
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 import { errorHandler } from "../../../../utils/error-handling";
 import HttpError from "../../../../utils/http-error";
@@ -13,7 +14,7 @@ export default async function searchMovie(
     );
     const data = await response.json();
     if (data.Response === "False" || data.Response === undefined) {
-      throw new HttpError("Not Found", 404);
+      throw new HttpError(ReasonPhrases.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     return res.status(200).json(data);
   } catch (error) {

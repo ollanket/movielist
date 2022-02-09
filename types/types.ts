@@ -6,7 +6,7 @@ export interface listEntry {
   year: string;
   rating: string;
   added: string;
-  notes: string;
+  note: string;
 }
 
 export interface userAuthData {
