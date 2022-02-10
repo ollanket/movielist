@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps<{
           "https://m.media-amazon.com/images/M/MV5BMTc0NTUwMTU5OV5BMl5BanBnXkFtZTcwNjAwNzQzMw@@._V1_SX300.jpg",
         year: "2005",
         rating: "PG",
-        notes: "Nice Movie!",
+        note: "Nice Movie!",
         added: "221187-2-1"
       }
     ];
