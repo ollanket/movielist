@@ -8,11 +8,7 @@ const userFetcher: Fetcher<userAuthData, string> = async (url) => {
   }
   return res.json();
 };
-/**
- * Custom hook that gets loginstate and username.
- * Uses swr.
- * @returns object containing data, loading state and error state
- */
+
 export function useUser() {
   const { data, error } = useSWR("/api/getUser", userFetcher);
   return {
