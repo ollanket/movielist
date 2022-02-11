@@ -46,4 +46,4 @@ const Alink = ({ url, text }: { url: string; text: string }) => {
   );
 };
 
-export default Footer;
+export default React.memo(Footer);
