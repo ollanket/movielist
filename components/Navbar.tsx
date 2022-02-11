@@ -12,7 +12,7 @@ const Navbar = () => {
         <div className="flex underline text-teal-800 basis-1/4">
           <Link href={data?.user ? "/personal" : "/"}>
             <a>
-              <p className="font-semibold">Movielist</p>
+              <p className="font-semibold hover:text-teal-700">Movielist</p>
             </a>
           </Link>
         </div>
