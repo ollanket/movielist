@@ -7,7 +7,7 @@ interface Props {
 }
 
 const EntryList = ({ controls, items }: Props) => {
-  return <div>EntryList</div>;
+  return <div className="z-0">EntryList</div>;
 };
 
 export default EntryList;
