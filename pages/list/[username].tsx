@@ -11,6 +11,7 @@ import Search from "../../components/list/Search";
 import EntryList from "../../components/list/EntryList";
 import { useUser } from "../../utils/hooks/use-user";
 import { useHttpClient } from "../../utils/hooks/http-hook";
+import SearchContent from "../../components/list/SearchContent";
 
 const List: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -18,10 +19,12 @@ const List: NextPage<
   const { data } = useUser();
   const [listState, SetListState] = useState(list);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [mainItem, setMainItem] = useState<string | undefined>("");
   return (
-    <div className="flex flex-col flex-grow bg-teal-200 h-full w-full justify-center items-center">
-      <div className="flex flex-col flex-grow bg-teal-300 h-full w-full max-w-screen-sm sm:max-w-screen-lg">
-        <Search controls={data?.username === username} />
+    <div className="flex flex-col flex-grow bg-teal-50 h-full w-full justify-center items-center">
+      <div className="flex flex-col flex-grow bg-white h-full w-full max-w-screen-sm sm:max-w-screen-lg">
+        <Search setImdbId={setMainItem} />
+        <SearchContent controls={false} imdbId={mainItem} />
         <EntryList controls={data?.username === username} items={listState} />
       </div>
     </div>
