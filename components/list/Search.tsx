@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect, useRef } from "react";
+import { MdClear } from "react-icons/md";
 import { OMDbSearchResponse } from "../../types/types";
 
 interface Props {
@@ -61,17 +62,37 @@ const Search = ({ controls }: Props) => {
   return (
     <div className="flex flex-grow-0 basis-1/6 z-50">
       <div className="flex flex-col w-full items-center justify-center bg-slate-500">
-        <label htmlFor="search">Search</label>
-        <input
-          id="search"
-          type="search"
-          autoComplete="off"
-          placeholder="Search..."
-          className="shadow appearance-none border rounded w-2/3 sm:w-2/5 py-2 px3 p-1 font-medium text-lg leading-tight focus:outline-none focus:shadow-outline"
-          onChange={(e) => setSearch(e.target.value)}
-          onFocus={() => setVisible(true)}
-          onBlur={() => setVisible(false)}
-        ></input>
+        <label
+          htmlFor="search"
+          className="flex  w-9/12 sm:w-6/12 justify-center items-center"
+        >
+          {isLoading ? (
+            <div className="flex absolute w-2/3 sm:w-5/12 px-3 justify-end ml-6 pointer-events-none">
+              <div
+                className={`w-4 h-4 border-b-2 border-teal-700 rounded-full animate-spin`}
+              ></div>
+            </div>
+          ) : (
+            <div className="flex absolute w-2/3 sm:w-5/12 px-3 justify-end ml-6 pointer-events-none">
+              <button
+                className={` pointer-events-auto w-4 h-4`}
+                onClick={() => setSearch("")}
+              >
+                <MdClear />
+              </button>
+            </div>
+          )}
+          <input
+            id="search"
+            type="search"
+            autoComplete="off"
+            placeholder="Search..."
+            className="shadow appearance-none border rounded w-full py-2 px-3 p-1 font-medium text-lg leading-tight focus:outline-none focus:shadow-outline"
+            onChange={(e) => setSearch(e.target.value)}
+            onFocus={() => setVisible(true)}
+            onBlur={() => setVisible(false)}
+          ></input>
+        </label>
         {items && visible && (
           <div className="flex flex-col overflow-visible invisible h-0 w-full sm:w-2/3">
             <div className="flex flex-col bg-white visible rounded-md p-1 sm:p-2 border border-teal-300 min-h-min mt-1">
