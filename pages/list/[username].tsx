@@ -24,7 +24,10 @@ const List: NextPage<
     <div className="flex flex-col flex-grow bg-teal-50 h-full w-full justify-center items-center">
       <div className="flex flex-col flex-grow bg-white h-full w-full max-w-screen-sm sm:max-w-screen-lg">
         <Search setImdbId={setMainItem} />
-        <SearchContent controls={false} imdbId={mainItem} />
+        <SearchContent
+          controls={data?.username === username}
+          imdbId={mainItem}
+        />
         <EntryList controls={data?.username === username} items={listState} />
       </div>
     </div>

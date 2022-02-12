@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { Transition } from "@headlessui/react";
 import React, { useState, useEffect, useRef } from "react";
 import { MdClear } from "react-icons/md";
 import { OMDbSearchResponse } from "../../types/types";
@@ -93,47 +94,57 @@ const Search = ({
             )}
           </div>
         </form>
-        {items && visible && (
-          <div className="flex flex-col w-full items-center">
-            <div className="flex flex-col bg-white rounded-md p-1 sm:p-2 border border-teal-300 mt-1 absolute w-full sm:w-2/3">
-              {Array.from(items)
-                .splice(showSecondSet ? 5 : 0, 5)
-                .map(({ Title, Year, Poster, imdbID }, i) => (
-                  <div
-                    className="cursor-pointer flex md:flex items-center border-t bg-white p-0.5 rounded-md hover:shadow-sm  transition ease-in-out delay-75 hover:scale-110 hover:border-0 hover:p-1 hover:bg-slate-100 duration-150"
-                    onMouseDown={() => setImdbId(imdbID)}
-                    key={i}
-                  >
-                    <div className="basis-2/12 sm:basis-1/12 h-16 sm:h-20">
-                      <img
-                        src={Poster === "N/A" ? "" : Poster}
-                        alt="no img"
-                        className="object-fill h-full w-full"
-                      ></img>
+        {items && (
+          <Transition
+            show={visible}
+            enter="transition-opacity duration-[250ms]"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-[250ms] ease-in-out"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="flex flex-col w-full items-center">
+              <div className="flex flex-col bg-white rounded-md p-1 sm:p-2 border border-teal-300 mt-1 absolute w-full sm:w-2/3">
+                {Array.from(items)
+                  .splice(showSecondSet ? 5 : 0, 5)
+                  .map(({ Title, Year, Poster, imdbID }, i) => (
+                    <div
+                      className="cursor-pointer flex md:flex items-center border-t bg-white p-0.5 rounded-md hover:shadow-sm  transition ease-in-out delay-75 hover:scale-110 hover:border-0 hover:p-1 hover:bg-slate-100 duration-150"
+                      onMouseDown={() => setImdbId(imdbID)}
+                      key={i}
+                    >
+                      <div className="basis-2/12 sm:basis-1/12 h-16 sm:h-20">
+                        <img
+                          src={Poster === "N/A" ? "" : Poster}
+                          alt="no img"
+                          className="object-fill h-full w-full"
+                        ></img>
+                      </div>
+                      <div className="basis-3/5 ml-3 flex justify-start">
+                        Title: {Title}
+                      </div>
+                      <div className="basis-1/5 flex justify-end">
+                        Year: {Year}
+                      </div>
                     </div>
-                    <div className="basis-3/5 ml-3 flex justify-start">
-                      Title: {Title}
-                    </div>
-                    <div className="basis-1/5 flex justify-end">
-                      Year: {Year}
-                    </div>
+                  ))}
+                {items.length > 5 && (
+                  <div className="flex justify-center p-0.5 bg-teal-100">
+                    <button
+                      className="underline hover:text-teal-900"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setShowSecondSet((prevState) => !prevState);
+                      }}
+                    >
+                      {showSecondSet ? "prev results" : "next results"}
+                    </button>
                   </div>
-                ))}
-              {items.length > 5 && (
-                <div className="flex justify-center p-0.5 bg-teal-100">
-                  <button
-                    className="underline hover:text-teal-900"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      setShowSecondSet((prevState) => !prevState);
-                    }}
-                  >
-                    {showSecondSet ? "prev results" : "next results"}
-                  </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          </Transition>
         )}
       </div>
     </div>

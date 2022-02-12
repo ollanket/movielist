@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { Transition } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
 import {
   MdOutlineKeyboardArrowDown,
@@ -38,62 +39,67 @@ const SearchContent = ({ controls, imdbId }: Props) => {
       {}
       {!isLoading && movie && (
         <div className="flex-col bg-white border-md rounded overflow-hidden border p-2">
-          <div className="flex flex-row">
+          <div className="flex flex-row justify-evenly">
             <div className="sm:flex basis-3/12 hidden bg-teal-100">
               <img
                 src={movie.Poster !== "N/A" ? movie.Poster : ""}
                 alt="no img"
-                className=" object-contain"
+                className=" object-fill"
               ></img>
             </div>
-            <div className="flex-col w-full sm:basis-9/12">
+            <div
+              className="flex-col w-full sm:basis-9/12
+            "
+            >
               <div className="flex bg-teal-100 font-semibold p-1 text-xl">
                 <div className="ml-2">{movie.Title}</div>
-                <div className="flex flex-grow justify-end">
-                  <button
-                    className="mr-3 underline appearance-none"
-                    onClick={() => console.log("asd")}
-                  >
-                    Add
-                  </button>
-                </div>
+                {controls && (
+                  <div className="flex flex-grow justify-end">
+                    <button
+                      className="mr-3 underline appearance-none"
+                      onClick={() => console.log("asd")}
+                    >
+                      Add
+                    </button>
+                  </div>
+                )}
               </div>
-              <div className=" flex w-full p-1 ">
+              <div className=" flex w-full p-1">
                 <div className="flex flex-col justify-between w-full ">
-                  <div className="p-0.5 ">
+                  <div className="p-1 ">
                     <p>Released: {movie.Released}</p>
                   </div>
-                  <div className="p-0.5">
+                  <div className="p-1">
                     <p>Country: {movie.Country}</p>
                   </div>
-                  <div className="p-0.5 hidden sm:flex">
+                  <div className="p-1 hidden sm:flex">
                     <p>Awards: {movie.Awards}</p>
                   </div>
-                  <div className="p-0.5 hidden sm:flex">
+                  <div className="p-1 hidden sm:flex">
                     <p>BoxOffice: {movie.BoxOffice}</p>
                   </div>
-                  <div className="p-0.5">
+                  <div className="p-1">
                     <p>Rating: {movie.Rated}</p>
                   </div>
-                  <div className="p-0.5">
+                  <div className="mt-1 ml-1">
                     <p>Imdb Rating: {movie.imdbRating}</p>
                   </div>
-                  <div className="p-0.5 hidden sm:flex">
+                  <div className="mt-2 ml-1 hidden sm:flex">
                     <p>Metascore: {movie.Metascore}</p>
                   </div>
-                  <div className="p-0.5">
+                  <div className="mt-2 ml-1">
                     <p>Language: {movie.Language}</p>
                   </div>
-                  <div className="p-0.5 hidden sm:flex">
+                  <div className="mt-2 ml-1 hidden sm:flex">
                     <p>Director: {movie.Director}</p>
                   </div>
-                  <div className="p-0.5 hidden sm:flex">
+                  <div className="mt-2 ml-1 hidden sm:flex">
                     <p>Actors: {movie.Actors}</p>
                   </div>
-                  <div className="p-0.5">
+                  <div className="mt-2 ml-1">
                     <p>Genre: {movie.Genre}</p>
                   </div>
-                  <div className="p-0.5">
+                  <div className="mt-2 ml-1">
                     <div className="flex items-baseline">
                       Plot
                       <button
@@ -120,13 +126,21 @@ const SearchContent = ({ controls, imdbId }: Props) => {
               </div>
             </div>
           </div>
-          {Plot && (
-            <div className="flex flex-wrap p-2 border-t border-teal-300">
+          <Transition
+            show={Plot}
+            enter="transition-opacity duration-[300ms]"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-[250ms]"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="flex flex-wrap p-2 mt-1">
               <p className=" leading-tight">
                 {movie.Plot === "N/A" ? "" : movie.Plot}
               </p>
             </div>
-          )}
+          </Transition>
         </div>
       )}
     </>
