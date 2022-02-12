@@ -15,6 +15,7 @@ const Search = ({ controls }: Props) => {
   );
   const [visible, setVisible] = useState(false);
   const controllerRef = useRef<AbortController | null>();
+  const [showSecondSet, setShowSecondSet] = useState(false);
 
   useEffect(() => {
     if (search.length < 3) {
@@ -93,29 +94,68 @@ const Search = ({ controls }: Props) => {
           </div>
         </form>
         {items && visible && (
-          <div className="flex flex-col overflow-visible invisible h-0 w-full sm:w-2/3">
-            <div className="flex flex-col bg-white visible rounded-md p-1 sm:p-2 border border-teal-300 mt-1">
-              {items.map(({ Title, Year, Poster, imdbID }, i) => (
-                <div
-                  className={`cursor-pointer flex md:flex items-center border-t bg-white ${
-                    i < 5 ? "visible" : "hidden"
-                  } md:visible p-0.5 rounded-md hover:shadow-sm  transition ease-in-out delay-75 hover:scale-110 hover:border-0 hover:p-1 hover:bg-slate-100 duration-150 `}
-                  onClick={() => setVisible(false)}
-                  key={i}
-                >
-                  <div className="basis-2/12 sm:basis-1/12 h-16 sm:h-20">
-                    <img
-                      src={Poster === "N/A" ? "" : Poster}
-                      alt="no img"
-                      className="object-fill h-full w-full"
-                    ></img>
-                  </div>
-                  <div className="basis-3/5 ml-3 flex justify-start">
-                    Title: {Title}
-                  </div>
-                  <div className="basis-1/5 flex justify-end">Year: {Year}</div>
+          <div className="flex flex-col w-full items-center">
+            <div className="flex flex-col bg-white rounded-md p-1 sm:p-2 border border-teal-300 mt-1 absolute w-full sm:w-2/3">
+              {items.length > 5
+                ? Array.from(items)
+                    .splice(showSecondSet ? 5 : 0, 5)
+                    .map(({ Title, Year, Poster, imdbID }, i) => (
+                      <div
+                        className="cursor-pointer flex md:flex items-center border-t bg-white p-0.5 rounded-md hover:shadow-sm  transition ease-in-out delay-75 hover:scale-110 hover:border-0 hover:p-1 hover:bg-slate-100 duration-150"
+                        onClick={() => console.log(Title)}
+                        key={i}
+                      >
+                        <div className="basis-2/12 sm:basis-1/12 h-16 sm:h-20">
+                          <img
+                            src={Poster === "N/A" ? "" : Poster}
+                            alt="no img"
+                            className="object-fill h-full w-full"
+                          ></img>
+                        </div>
+                        <div className="basis-3/5 ml-3 flex justify-start">
+                          Title: {Title}
+                        </div>
+                        <div className="basis-1/5 flex justify-end">
+                          Year: {Year}
+                        </div>
+                      </div>
+                    ))
+                : items.map(({ Title, Year, Poster, imdbID }, i) => (
+                    <div
+                      className="cursor-pointer flex items-center border-t bg-white p-0.5 rounded-md hover:shadow-sm  transition ease-in-out delay-75 hover:scale-110 hover:border-0 hover:p-1 hover:bg-slate-100 duration-150"
+                      onClick={() => console.log(Title)}
+                      key={i}
+                    >
+                      <div className="basis-2/12 sm:basis-1/12 h-16 sm:h-20">
+                        <img
+                          src={Poster === "N/A" ? "" : Poster}
+                          alt="no img"
+                          className="object-fill h-full w-full"
+                        ></img>
+                      </div>
+                      <div className="basis-3/5 ml-3 flex justify-start">
+                        Title: {Title}
+                      </div>
+                      <div className="basis-1/5 flex justify-end">
+                        Year: {Year}
+                      </div>
+                    </div>
+                  ))}
+              {items.length > 5 ? (
+                <div className="flex justify-center p-0.5 bg-teal-100">
+                  <button
+                    className="underline hover:text-teal-900"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setShowSecondSet((prevState) => !prevState);
+                    }}
+                  >
+                    {showSecondSet ? "prev results" : "next results"}
+                  </button>
                 </div>
-              ))}
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
         )}
