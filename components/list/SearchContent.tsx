@@ -7,6 +7,7 @@ import {
 } from "react-icons/md";
 import { OMDbExactResponse } from "../../types/types";
 import { useHttpClient } from "../../utils/hooks/http-hook";
+import LoadingBouncer from "../LoadingBouncer";
 
 interface Props {
   controls: boolean;
@@ -36,8 +37,10 @@ const SearchContent = ({ controls, imdbId }: Props) => {
 
   return (
     <>
-      {}
-      {!isLoading && movie && (
+      {!isLoading && (
+        <LoadingBouncer style="w-full flex justify-center items-center h-2/5 text-teal-500" />
+      )}
+      {isLoading && movie && (
         <div className="flex-col bg-white border-md rounded overflow-hidden border p-2">
           <div className="flex flex-row justify-evenly">
             <div className="sm:flex basis-3/12 hidden bg-teal-100">
