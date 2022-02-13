@@ -10,7 +10,6 @@ import { listEntry } from "../../types/types";
 import Search from "../../components/list/Search";
 import EntryList from "../../components/list/EntryList";
 import { useUser } from "../../utils/hooks/use-user";
-import { useHttpClient } from "../../utils/hooks/http-hook";
 import SearchContent from "../../components/list/SearchContent";
 
 const List: NextPage<
@@ -18,7 +17,6 @@ const List: NextPage<
 > = ({ list, username }) => {
   const { data } = useUser();
   const [listState, SetListState] = useState(list);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [mainItem, setMainItem] = useState<string | undefined>("");
 
   return (
@@ -29,7 +27,12 @@ const List: NextPage<
           controls={data?.username === username}
           imdbId={mainItem}
         />
-        <EntryList controls={data?.username === username} items={listState} />
+        <EntryList
+          controls={data?.username === username}
+          items={listState}
+          setList={SetListState}
+          list={listState}
+        />
       </div>
     </div>
   );

@@ -8,9 +8,11 @@ import { AiOutlineInfo, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 interface Props {
   entry: listEntry;
   controls: boolean;
+  setList: React.Dispatch<React.SetStateAction<listEntry[]>>;
+  list: Array<listEntry>;
 }
 
-const ListItem = ({ entry, controls }: Props) => {
+const ListItem = ({ entry, controls, list, setList }: Props) => {
   return (
     <div className="flex w-full sm:h-24 h:16  border-b border-teal-300 overflow-visible rounded bg-white mt-0.5">
       <div className="flex basis-1/12">

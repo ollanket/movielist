@@ -8,7 +8,7 @@ import {
 import { OMDbExactResponse } from "../../types/types";
 import { useHttpClient } from "../../utils/hooks/http-hook";
 import LoadingBouncer from "../LoadingBouncer";
-import Example from "../modals/AddDialog";
+import AddDialog from "../modals/AddDialog";
 
 interface Props {
   controls: boolean;
@@ -38,7 +38,7 @@ const SearchContent = ({ controls, imdbId }: Props) => {
 
   return (
     <>
-      <Example
+      <AddDialog
         open={dialogOpen}
         setOpen={setDialogOpen}
         title={movie?.Title}
