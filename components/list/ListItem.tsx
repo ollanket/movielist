@@ -43,13 +43,13 @@ export default ListItem;
 
 function DropDown({ controls }: { controls: boolean }) {
   return (
-    <Menu as="div" className="relative inline-block text-left overflow-visible">
+    <Menu
+      as="div"
+      className="relative inline-block text-left overflow-visible text-lg"
+    >
       <div>
         <Menu.Button className=" z-0 mt-2 inline-flex justify-center w-full shadow-sm bg-white ">
-          <HiOutlineDotsVertical
-            className="-mr-1 ml-2 h-5 w-5"
-            aria-hidden="true"
-          />
+          <HiOutlineDotsVertical />
         </Menu.Button>
       </div>
 
@@ -62,7 +62,7 @@ function DropDown({ controls }: { controls: boolean }) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className=" z-40 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className=" z-40 origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
@@ -82,42 +82,46 @@ function DropDown({ controls }: { controls: boolean }) {
                 </span>
               )}
             </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <span
-                  className={
-                    active
-                      ? "bg-gray-100 text-gray-900 block px-4 py-2 cursor-pointer"
-                      : "text-gray-700 block px-4 py-2 text-sm"
-                  }
-                >
-                  <div className="flex items-center">
-                    <AiOutlineDelete className=" text-lg mr-1" />
-                    <span className="pl-2 border-l-2 border-teal-300">
-                      Delete
+            {controls && (
+              <>
+                <Menu.Item>
+                  {({ active }) => (
+                    <span
+                      className={
+                        active
+                          ? "bg-gray-100 text-gray-900 block px-4 py-2 cursor-pointer"
+                          : "text-gray-700 block px-4 py-2 text-sm"
+                      }
+                    >
+                      <div className="flex items-center">
+                        <AiOutlineDelete className=" text-lg mr-1" />
+                        <span className="pl-2 border-l-2 border-teal-300">
+                          Delete
+                        </span>
+                      </div>
                     </span>
-                  </div>
-                </span>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <span
-                  className={
-                    active
-                      ? "bg-gray-100 text-gray-900 block px-4 py-2 cursor-pointer"
-                      : "text-gray-700 block px-4 py-2 text-sm"
-                  }
-                >
-                  <div className="flex items-center">
-                    <AiOutlineEdit className=" text-lg mr-1" />
-                    <span className="pl-2 border-l-2 border-teal-300">
-                      Edit
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <span
+                      className={
+                        active
+                          ? "bg-gray-100 text-gray-900 block px-4 py-2 cursor-pointer"
+                          : "text-gray-700 block px-4 py-2 text-sm"
+                      }
+                    >
+                      <div className="flex items-center">
+                        <AiOutlineEdit className=" text-lg mr-1" />
+                        <span className="pl-2 border-l-2 border-teal-300">
+                          Edit
+                        </span>
+                      </div>
                     </span>
-                  </div>
-                </span>
-              )}
-            </Menu.Item>
+                  )}
+                </Menu.Item>
+              </>
+            )}
           </div>
         </Menu.Items>
       </Transition>

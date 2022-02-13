@@ -3,7 +3,7 @@ import {
   GetServerSideProps,
   InferGetServerSidePropsType
 } from "next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { serverClient } from "../../utils/auth";
 import { query as q } from "faunadb";
 import { listEntry } from "../../types/types";
@@ -20,6 +20,7 @@ const List: NextPage<
   const [listState, SetListState] = useState(list);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [mainItem, setMainItem] = useState<string | undefined>("");
+
   return (
     <div className="flex flex-col flex-grow bg-teal-50 h-full w-full justify-center items-center">
       <div className="flex flex-col flex-grow bg-white h-full w-full max-w-screen-sm sm:max-w-screen-lg">
@@ -44,7 +45,6 @@ export const getServerSideProps: GetServerSideProps<{
     if (!username) {
       throw new Error("No username in query");
     }
-
     const { data }: { data: Array<listEntry> } = await serverClient.query(
       q.Call(q.Function("getList"), [
         username,

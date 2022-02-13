@@ -14,8 +14,8 @@ const EntryList = ({ controls, items }: Props) => {
       <ListBar />
       <div className="w-full h-full mt-0.5 border-l border-r border-teal-300">
         <div className="w-full">
-          {items.map((entry) => (
-            <ListItem key={entry.imdbId} entry={entry} />
+          {items.map((entry, i) => (
+            <ListItem key={i} entry={entry} controls={controls} />
           ))}
         </div>
         <div className="flex justify-center h-4  mb-2 mt-2 items-center">
