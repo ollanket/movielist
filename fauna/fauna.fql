@@ -76,15 +76,15 @@ CreateIndex({
 // Makes addEntry udf throw if we add the same entry to a list.
 CreateIndex({
   name: "constraint",
+  source: Collection("movies"),
   unique: true,
   serialized: true,
-  source: "movies",
   terms: [
     {
       field: ["data", "owner"]
     },
     {
-      field: ["data", "title"]
+      field: ["data", "imdbId"]
     }
   ]
 })

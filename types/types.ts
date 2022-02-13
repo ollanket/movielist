@@ -7,6 +7,7 @@ export interface listEntry {
   rating: string;
   added: string;
   note: string;
+  imdbId: string;
 }
 
 export interface userAuthData {

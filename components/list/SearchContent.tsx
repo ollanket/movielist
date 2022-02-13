@@ -8,6 +8,7 @@ import {
 import { OMDbExactResponse } from "../../types/types";
 import { useHttpClient } from "../../utils/hooks/http-hook";
 import LoadingBouncer from "../LoadingBouncer";
+import Example from "../modals/AddDialog";
 
 interface Props {
   controls: boolean;
@@ -18,6 +19,7 @@ const SearchContent = ({ controls, imdbId }: Props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [movie, setMovie] = useState<OMDbExactResponse | null>();
   const [Plot, setPlot] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!imdbId) {
@@ -28,7 +30,6 @@ const SearchContent = ({ controls, imdbId }: Props) => {
         const res: OMDbExactResponse = await sendRequest(
           `/api/omdb/get/${imdbId}`
         );
-        console.log(res);
         setMovie(res);
       } catch (error) {}
     };
@@ -37,10 +38,19 @@ const SearchContent = ({ controls, imdbId }: Props) => {
 
   return (
     <>
-      {!isLoading && (
-        <LoadingBouncer style="w-full flex justify-center items-center h-2/5 text-teal-500" />
+      <Example
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+        title={movie?.Title}
+        year={movie?.Year}
+        poster={movie?.Poster}
+        rated={movie?.Rated}
+        imdbId={imdbId}
+      />
+      {isLoading && (
+        <LoadingBouncer style="w-full flex justify-center items-center h-2/6 text-teal-500" />
       )}
-      {isLoading && movie && (
+      {!isLoading && movie && (
         <div className="flex-col bg-white border-md rounded overflow-hidden border p-2">
           <div className="flex flex-row justify-evenly">
             <div className="sm:flex basis-3/12 hidden bg-teal-100">
@@ -60,7 +70,7 @@ const SearchContent = ({ controls, imdbId }: Props) => {
                   <div className="flex flex-grow justify-end">
                     <button
                       className="mr-3 underline appearance-none"
-                      onClick={() => console.log("asd")}
+                      onClick={() => setDialogOpen(true)}
                     >
                       Add
                     </button>
