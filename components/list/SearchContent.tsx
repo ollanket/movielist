@@ -51,7 +51,7 @@ const SearchContent = ({ controls, imdbId }: Props) => {
         <LoadingBouncer style="w-full flex justify-center items-center h-2/6 text-teal-500" />
       )}
       {!isLoading && movie && (
-        <div className="flex-col bg-white border-md rounded overflow-hidden border p-2">
+        <div className="flex-col bg-white border-md rounded border p-1.5">
           <div className="flex flex-row justify-evenly">
             <div className="sm:flex basis-3/12 hidden bg-teal-100">
               <img

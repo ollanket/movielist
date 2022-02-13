@@ -60,7 +60,7 @@ const Search = ({
 
   return (
     <div className="flex flex-grow-0 z-50">
-      <div className="flex flex-col w-full items-center justify-center bg-teal-100 py-2">
+      <div className="flex flex-col w-full items-center justify-center bg-teal-50 py-2">
         <form className="w-full max-w-sm">
           <div className="flex items-center border-b border-teal-500 py-2 bg-white border rounded-md text-lg">
             <input

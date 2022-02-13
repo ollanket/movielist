@@ -40,7 +40,7 @@ const AddDialog = ({
           rating: rated,
           poster,
           score,
-          note: "sad",
+          note: " ",
           imdbId
         }),
         { "Content-Type": "application/json" }
