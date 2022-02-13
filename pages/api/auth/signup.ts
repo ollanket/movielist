@@ -1,10 +1,10 @@
 import { query as q } from "faunadb";
 import Joi from "joi";
 import { NextApiRequest, NextApiResponse } from "next";
-import validate from "../../lib/middlewares/validation";
-import { ref } from "../../types/types";
-import { serverClient } from "../../utils/auth";
-import { errorHandler } from "../../utils/error-handling";
+import validate from "../../../lib/middlewares/validation";
+import { ref } from "../../../types/types";
+import { serverClient } from "../../../utils/auth";
+import { errorHandler } from "../../../utils/error-handling";
 
 const schema = Joi.object({
   username: Joi.string().alphanum().min(3).max(10).required(),

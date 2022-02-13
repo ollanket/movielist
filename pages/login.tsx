@@ -21,7 +21,7 @@ const Login: NextPage = () => {
 
     try {
       // TODO: input validation.
-      const res = await fetch("api/login", {
+      const res = await fetch("api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
@@ -31,7 +31,7 @@ const Login: NextPage = () => {
         const { message } = await res.json();
         throw new Error(message);
       }
-      mutate("/api/getUser");
+      mutate("/api/auth/getUser");
       Router.push("/personal");
     } catch (error) {
       const { message } = error as Error;

@@ -2,10 +2,10 @@ import { query as q } from "faunadb";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import Joi from "joi";
 import { NextApiRequest, NextApiResponse } from "next";
-import validate from "../../lib/middlewares/validation";
-import { serverClient, serializeCookie } from "../../utils/auth";
-import { errorHandler } from "../../utils/error-handling";
-import HttpError from "../../utils/http-error";
+import validate from "../../../lib/middlewares/validation";
+import { serverClient, serializeCookie } from "../../../utils/auth";
+import { errorHandler } from "../../../utils/error-handling";
+import HttpError from "../../../utils/http-error";
 
 const schema = Joi.object({
   username: Joi.string().alphanum().min(3).max(10).required(),

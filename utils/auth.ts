@@ -28,7 +28,7 @@ import HttpError from "./http-error";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 export const logout = async () => {
-  await fetch("/api/logout");
+  await fetch("/api/auth/logout");
 
   window.localStorage.setItem("logoutMovieList", `${Date.now()}`);
 

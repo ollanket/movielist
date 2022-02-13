@@ -31,7 +31,7 @@ const List: NextPage<
           controls={data?.username === username}
           items={listState}
           setList={SetListState}
-          list={listState}
+          username={username as string}
         />
       </div>
     </div>

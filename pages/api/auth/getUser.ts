@@ -1,6 +1,6 @@
 import { query as q } from "faunadb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { faunaClient, FAUNA_SECRET_COOKIE } from "../../utils/auth";
+import { faunaClient, FAUNA_SECRET_COOKIE } from "../../../utils/auth";
 import cookie from "cookie";
 
 export default async function getCurrentUserName(

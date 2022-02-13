@@ -10,7 +10,7 @@ const userFetcher: Fetcher<userAuthData, string> = async (url) => {
 };
 
 export function useUser() {
-  const { data, error } = useSWR("/api/getUser", userFetcher);
+  const { data, error } = useSWR("/api/auth/getUser", userFetcher);
   return {
     data: data,
     isLoading: !error && !data,

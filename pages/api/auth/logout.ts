@@ -1,6 +1,6 @@
 import { query as q } from "faunadb";
 import cookie from "cookie";
-import { faunaClient, FAUNA_SECRET_COOKIE } from "../../utils/auth";
+import { faunaClient, FAUNA_SECRET_COOKIE } from "../../../utils/auth";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function logout(
@@ -21,7 +21,7 @@ export default async function logout(
     secure: process.env.NODE_ENV === "production",
     maxAge: -1,
     httpOnly: true,
-    path: "/",
+    path: "/"
   });
   res.setHeader("Set-Cookie", cookieSerialized);
   res.status(200).end();
