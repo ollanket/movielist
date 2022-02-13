@@ -24,7 +24,7 @@ const AddDialog = ({
   poster,
   imdbId
 }: Props) => {
-  const [score, setScore] = useState<number | null>(null);
+  const [score, setScore] = useState<number | null>(0);
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 

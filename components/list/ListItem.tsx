@@ -15,7 +15,7 @@ const ListItem = ({ entry, controls }: Props) => {
     <div className="flex w-full sm:h-24 h:16  border-b border-teal-300 overflow-visible rounded bg-white mt-0.5">
       <div className="flex basis-1/12">
         <img
-          src={entry.poster}
+          src={entry.poster !== "N/A" ? entry.poster : ""}
           alt="no img"
           className="flex w-full object-fill"
         ></img>
@@ -24,7 +24,9 @@ const ListItem = ({ entry, controls }: Props) => {
         <span className=" p-2 text-sm sm:text-lg">{entry.title}</span>
       </div>
       <div className="flex basis-1/12  items-center justify-center">
-        <span className=" text-sm sm:text-lg">{entry.score}</span>
+        <span className=" text-sm sm:text-lg">
+          {entry.score !== 0 ? entry.score : " "}
+        </span>
       </div>
       <div className="flex basis-1/12  items-center justify-center">
         <span className=" text-sm sm:text-lg">{entry.year}</span>

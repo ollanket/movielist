@@ -11,10 +11,10 @@ import { listEntry } from "../../../../types/types";
 
 const schema = Joi.object({
   title: Joi.string().required(),
-  score: Joi.number().min(0).max(10).default(0),
+  score: Joi.number().min(0).max(10).required(),
   year: Joi.string().required(),
-  note: Joi.string().default(" "),
-  poster: Joi.string().default(" "),
+  note: Joi.string().required(),
+  poster: Joi.string().required(),
   rating: Joi.string().required(),
   imdbId: Joi.string().required()
 });
