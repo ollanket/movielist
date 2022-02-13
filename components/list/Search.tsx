@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { Transition } from "@headlessui/react";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, FormEvent } from "react";
 import { MdClear } from "react-icons/md";
 import { OMDbSearchResponse } from "../../types/types";
 
@@ -58,10 +58,14 @@ const Search = ({
     };
   }, [search]);
 
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
+
   return (
     <div className="flex flex-grow-0 z-50">
       <div className="flex flex-col w-full items-center justify-center bg-teal-50 py-2">
-        <form className="w-full max-w-sm">
+        <form className="w-full max-w-sm" onSubmit={(e) => onSubmit(e)}>
           <div className="flex items-center border-b border-teal-500 py-2 bg-white border rounded-md text-lg">
             <input
               className="appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none"

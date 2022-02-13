@@ -29,7 +29,6 @@ const AddDialog = ({
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const addEntry = async () => {
-    console.log(title, year, rated, poster, score, imdbId);
     try {
       const response = await sendRequest(
         `/api/list/entry/add`,
@@ -46,7 +45,6 @@ const AddDialog = ({
         { "Content-Type": "application/json" }
       );
       setOpen(false);
-      console.log(response);
     } catch (error) {}
   };
 

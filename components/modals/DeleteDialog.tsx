@@ -7,8 +7,8 @@ import { MdAdd, MdClose } from "react-icons/md";
 interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  imdbId: string | undefined;
-  title: string | undefined;
+  imdbId?: string | undefined;
+  title?: string | undefined;
 }
 
 const DeleteDialog = ({ open, setOpen, imdbId, title }: Props) => {

@@ -39,7 +39,7 @@ const DefaultLoggedIn = ({ username }: { username: string }) => {
           className="text-md px-4 py-2 leading-none border rounded text-teal-500 bg-white border-teal-300 hover:border-transparent hover:text-white hover:bg-teal-700"
           onClick={async () => {
             await logout();
-            mutate("/api/getUser");
+            mutate("/api/auth/getUser");
           }}
         >
           Logout
