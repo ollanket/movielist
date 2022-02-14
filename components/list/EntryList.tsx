@@ -4,6 +4,7 @@ import { listEntry, sortOptions } from "../../types/types";
 import { useHttpClient } from "../../utils/hooks/http-hook";
 import LoadingBouncer from "../LoadingBouncer";
 import DeleteDialog from "../modals/DeleteDialog";
+import Modal from "../modals/Modal";
 import ListItem from "./ListItem";
 
 interface Props {
@@ -13,11 +14,20 @@ interface Props {
   username: string;
 }
 
+interface selectedEntry {
+  id: string;
+  title: string;
+}
+
 const EntryList = ({ controls, items, setList, username }: Props) => {
   const [sortState, setSortState] = useState<sortOptions>(0);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<selectedEntry | null>({
+    title: "",
+    id: ""
+  });
 
   const sortList = async (sort: sortOptions) => {
     try {
@@ -29,7 +39,7 @@ const EntryList = ({ controls, items, setList, username }: Props) => {
 
   const sortByTitle = async () => {
     setButtonsDisabled(true);
-    const sort = sortState === 1 ? 0 : 1;
+    const sort = sortState === 1 ? 0 : sortState !== 0 ? 0 : 1;
     await sortList(sort);
     setSortState(sort);
     setButtonsDisabled(false);
@@ -51,10 +61,19 @@ const EntryList = ({ controls, items, setList, username }: Props) => {
     setButtonsDisabled(false);
   };
 
+  const refreshList = async () => {
+    await sortList(sortState);
+  };
+
   return (
     <>
-      <DeleteDialog open={deleteDialog} setOpen={setDeleteDialog} />
-
+      <DeleteDialog
+        open={deleteDialog}
+        setOpen={setDeleteDialog}
+        id={selectedEntry?.id}
+        title={selectedEntry?.title}
+        refreshList={refreshList}
+      />
       <div className="flex w-full py-1 bg-teal-100 border rounded-t border-teal-300 text-teal-900">
         <div className="flex basis-1/12 justify-center items-center">img</div>
         <div className="flex basis-7/12 justify-center items-center">
@@ -108,8 +127,8 @@ const EntryList = ({ controls, items, setList, username }: Props) => {
                 key={i}
                 entry={entry}
                 controls={controls}
-                setList={setList}
-                list={items}
+                setDeleteDialog={setDeleteDialog}
+                setSelectedEntry={setSelectedEntry}
               />
             ))}
           </div>

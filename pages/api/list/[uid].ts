@@ -29,7 +29,6 @@ export default async function getList(
           sortOptions[parseInt(sort?.toString()) || 0]
         ])
       );
-    console.log(typeof data[0].score, data[0].score);
     res.status(StatusCodes.OK).json({ data, after });
   } catch (error) {
     errorHandler(error, res);

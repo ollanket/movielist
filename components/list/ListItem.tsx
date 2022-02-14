@@ -1,18 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { listEntry } from "../../types/types";
+import { listEntry, sortOptions } from "../../types/types";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { AiOutlineInfo, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+
+interface selectedEntry {
+  id: string;
+  title: string;
+}
+
 interface Props {
   entry: listEntry;
   controls: boolean;
-  setList: React.Dispatch<React.SetStateAction<listEntry[]>>;
-  list: Array<listEntry>;
+  setDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedEntry: React.Dispatch<React.SetStateAction<selectedEntry | null>>;
 }
 
-const ListItem = ({ entry, controls, list, setList }: Props) => {
+const ListItem = ({
+  entry,
+  controls,
+  setDeleteDialog,
+  setSelectedEntry
+}: Props) => {
   return (
     <div className="flex w-full sm:h-24 h:16  border-b border-l border-r border-teal-300 overflow-visible rounded bg-white mt-0.5">
       <div className="flex basis-1/12">
@@ -37,7 +48,12 @@ const ListItem = ({ entry, controls, list, setList }: Props) => {
         <span className=" text-sm sm:text-lg">{entry.rating}</span>
       </div>
       <div className="flex basis-1/12 items-center justify-center">
-        <DropDown controls={controls} />
+        <DropDown
+          controls={controls}
+          setDeleteDialog={setDeleteDialog}
+          entry={entry}
+          setSelectedEntry={setSelectedEntry}
+        />
       </div>
     </div>
   );
@@ -45,7 +61,17 @@ const ListItem = ({ entry, controls, list, setList }: Props) => {
 
 export default ListItem;
 
-function DropDown({ controls }: { controls: boolean }) {
+function DropDown({
+  controls,
+  setDeleteDialog,
+  entry,
+  setSelectedEntry
+}: {
+  entry: listEntry;
+  controls: boolean;
+  setDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedEntry: React.Dispatch<React.SetStateAction<selectedEntry | null>>;
+}) {
   return (
     <Menu
       as="div"
@@ -96,6 +122,13 @@ function DropDown({ controls }: { controls: boolean }) {
                           ? "bg-gray-100 text-gray-900 block px-4 py-2 cursor-pointer"
                           : "text-gray-700 block px-4 py-2 text-sm"
                       }
+                      onClick={() => {
+                        setSelectedEntry({
+                          id: entry.id,
+                          title: entry.title
+                        });
+                        setDeleteDialog(true);
+                      }}
                     >
                       <div className="flex items-center">
                         <AiOutlineDelete className=" text-lg mr-1" />

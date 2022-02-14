@@ -50,13 +50,18 @@ const DefaultLoggedIn = ({ username }: { username: string }) => {
 };
 
 const Default = () => {
-  const { pathname } = useRouter();
+  const { pathname, query } = useRouter();
   return (
     <>
       <div className="flex items-baseline tracking-tight basis-2/4 justify-center">
         <span className=" text-sm text-teal-800">Welcome to the&nbsp;</span>
         <span className=" font-semibold text-teal-900 ">
-          {pathname === "/" ? "Home" : pathname.substring(1)}&nbsp;
+          {pathname === "/"
+            ? "Home"
+            : pathname.substring(1) === "list/[username]"
+            ? query.username + "'s list"
+            : " "}
+          &nbsp;
         </span>
         <span className=" text-sm text-teal-800">page!&nbsp;</span>
       </div>
