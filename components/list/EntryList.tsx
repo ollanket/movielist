@@ -83,7 +83,7 @@ const EntryList = ({
         title={selectedEntry?.title}
         refreshList={refreshList}
       />
-      <div className="flex w-full py-1 bg-teal-100 border rounded-t border-teal-300 text-teal-900">
+      <div className="flex w-full py-1 bg-teal-100 border rounded-t border-teal-300 text-teal-900 text-xs sm:text-base">
         <div className="flex basis-1/12 justify-center items-center">img</div>
         <div className="flex basis-7/12 justify-center items-center">
           <button
@@ -103,7 +103,7 @@ const EntryList = ({
             score
           </button>
         </div>
-        <div className="flex basis-1/12 justify-center items-center">
+        <div className="flex basis-2/12 sm:basis-1/12 justify-center items-center">
           <button
             className="underline appearance-none transition ease-in-out delay-75 hover:text-teal-500 hover:scale-105"
             onClick={() => sortByYear()}
@@ -112,7 +112,9 @@ const EntryList = ({
             year
           </button>
         </div>
-        <div className="flex basis-1/12 justify-center items-center">rated</div>
+        <div className="sm:flex basis-1/12 justify-center items-center hidden">
+          rated
+        </div>
         <div className="flex basis-1/12 justify-center items-center">
           options
         </div>
@@ -120,6 +122,7 @@ const EntryList = ({
 
       <Transition
         show={!isLoading}
+        unmount={false}
         enter="transition-opacity duration-[500ms]"
         enterFrom="opacity-0"
         enterTo="opacity-100"
@@ -141,7 +144,7 @@ const EntryList = ({
           </div>
           {items.length !== 0 && (
             <div className="flex justify-center h-4  mb-4 mt-4 items-center">
-              <span className="text-xs leading-tight text-gray-600 hidden sm:flex italic border-b">
+              <span className="text-xs leading-tight text-gray-600 flex italic border-b">
                 The End
               </span>
             </div>

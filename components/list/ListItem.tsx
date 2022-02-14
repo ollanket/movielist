@@ -34,18 +34,18 @@ const ListItem = ({
         ></img>
       </div>
       <div className="flex basis-7/12 items-center">
-        <span className=" p-2 text-sm sm:text-lg">{entry.title}</span>
+        <span className=" p-2 text-xs sm:text-lg">{entry.title}</span>
       </div>
       <div className="flex basis-1/12  items-center justify-center">
-        <span className=" text-sm sm:text-lg">
+        <span className=" text-xs sm:text-lg">
           {entry.score !== 0 ? entry.score : " "}
         </span>
       </div>
-      <div className="flex basis-1/12  items-center justify-center">
-        <span className=" text-sm sm:text-lg">{entry.year}</span>
+      <div className="flex sm:basis-1/12 basis-2/12 items-center justify-center">
+        <span className=" text-xs sm:text-lg">{entry.year}</span>
       </div>
-      <div className="flex basis-1/12 items-center justify-center text-center">
-        <span className=" text-sm sm:text-lg">{entry.rating}</span>
+      <div className="sm:flex basis-1/12 items-center justify-center text-center hidden">
+        <span className=" text-xs sm:text-lg">{entry.rating}</span>
       </div>
       <div className="flex basis-1/12 items-center justify-center">
         <DropDown
@@ -92,7 +92,7 @@ function DropDown({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className=" z-40 origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className=" z-40 origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
