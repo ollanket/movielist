@@ -3,7 +3,7 @@ import {
   GetServerSideProps,
   InferGetServerSidePropsType
 } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { serverClient } from "../../utils/auth";
 import { query as q } from "faunadb";
 import { listEntry } from "../../types/types";
@@ -19,6 +19,7 @@ const List: NextPage<
   const [listState, SetListState] = useState(list);
   const [mainItem, setMainItem] = useState<string | undefined>("");
 
+  const refreshList = useRef<() => Promise<void>>();
   return (
     <div className="flex flex-col flex-grow bg-teal-50 h-full w-full justify-center items-center">
       <div className="flex flex-col flex-grow bg-white h-full w-full max-w-screen-sm sm:max-w-screen-lg">
@@ -26,12 +27,14 @@ const List: NextPage<
         <SearchContent
           controls={data?.username === username}
           imdbId={mainItem}
+          refreshList={refreshList}
         />
         <EntryList
           controls={data?.username === username}
           items={listState}
           setList={SetListState}
           username={username as string}
+          setRefreshListRef={refreshList}
         />
       </div>
     </div>

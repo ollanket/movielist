@@ -4,7 +4,6 @@ import LoadingBouncer from "../LoadingBouncer";
 import { MdClose } from "react-icons/md";
 import Modal from "./Modal";
 import { AiOutlineDelete } from "react-icons/ai";
-import { sortOptions } from "../../types/types";
 
 interface Props {
   open: boolean;
@@ -23,8 +22,8 @@ const DeleteDialog = ({ open, setOpen, id, title, refreshList }: Props) => {
         `/api/list/entry/delete/${id}`,
         "DELETE"
       );
-      await refreshList();
       setOpen(false);
+      await refreshList();
     } catch (error) {}
   };
 
@@ -32,7 +31,7 @@ const DeleteDialog = ({ open, setOpen, id, title, refreshList }: Props) => {
     <Modal
       open={open}
       setOpen={setOpen}
-      header={<Header title={title} error={error} imdbId={id} />}
+      header={<Header title={title} error={error} />}
       main={
         isLoading ? (
           <LoadingBouncer style="w-full flex justify-center h-16 items-center text-teal-500" />
@@ -56,12 +55,10 @@ export default DeleteDialog;
 
 const Header = ({
   title,
-  error,
-  imdbId
+  error
 }: {
   title: string | undefined;
   error: string | null | undefined;
-  imdbId: string | undefined;
 }) => {
   return (
     <>

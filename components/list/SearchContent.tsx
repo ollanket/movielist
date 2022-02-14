@@ -13,9 +13,10 @@ import AddDialog from "../modals/AddDialog";
 interface Props {
   controls: boolean;
   imdbId: string | undefined;
+  refreshList: React.MutableRefObject<(() => Promise<void>) | undefined>;
 }
 
-const SearchContent = ({ controls, imdbId }: Props) => {
+const SearchContent = ({ controls, imdbId, refreshList }: Props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [movie, setMovie] = useState<OMDbExactResponse | null>();
   const [Plot, setPlot] = useState(false);
@@ -46,9 +47,10 @@ const SearchContent = ({ controls, imdbId }: Props) => {
         poster={movie?.Poster}
         rated={movie?.Rated}
         imdbId={imdbId}
+        refreshList={refreshList}
       />
       {isLoading && (
-        <LoadingBouncer style="w-full flex justify-center items-center h-2/6 text-teal-500" />
+        <LoadingBouncer style="w-full flex h-80 sm:h-96 justify-center items-center text-teal-500" />
       )}
       {!isLoading && movie && (
         <div className="flex-col bg-white border-md rounded border p-1.5">

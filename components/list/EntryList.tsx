@@ -12,6 +12,7 @@ interface Props {
   items: Array<listEntry>;
   setList: React.Dispatch<React.SetStateAction<listEntry[]>>;
   username: string;
+  setRefreshListRef: React.MutableRefObject<(() => Promise<void>) | undefined>;
 }
 
 interface selectedEntry {
@@ -19,7 +20,13 @@ interface selectedEntry {
   title: string;
 }
 
-const EntryList = ({ controls, items, setList, username }: Props) => {
+const EntryList = ({
+  controls,
+  items,
+  setList,
+  username,
+  setRefreshListRef
+}: Props) => {
   const [sortState, setSortState] = useState<sortOptions>(0);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
@@ -65,6 +72,8 @@ const EntryList = ({ controls, items, setList, username }: Props) => {
     await sortList(sortState);
   };
 
+  setRefreshListRef.current = refreshList;
+
   return (
     <>
       <DeleteDialog
@@ -108,9 +117,7 @@ const EntryList = ({ controls, items, setList, username }: Props) => {
           options
         </div>
       </div>
-      {isLoading && (
-        <LoadingBouncer style="w-full h-screen flex justify-center items-center text-teal-500" />
-      )}
+
       <Transition
         show={!isLoading}
         enter="transition-opacity duration-[500ms]"
