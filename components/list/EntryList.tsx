@@ -127,7 +127,7 @@ const EntryList = ({
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className="w-full h-full mt-0.5 ">
+        <div className="w-full h-full mt-0.5 min-h-screen">
           <div className="w-full">
             {items.map((entry, i) => (
               <ListItem

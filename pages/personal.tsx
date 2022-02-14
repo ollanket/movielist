@@ -22,7 +22,7 @@ const Personal: NextPage = () => {
         />
 
         <TextLink
-          href="/Test"
+          href="/list/testi2"
           heading="Example"
           paragraph="Checkout an example movielist"
         />
