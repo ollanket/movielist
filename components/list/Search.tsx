@@ -109,16 +109,16 @@ const Search = ({
             leaveTo="opacity-0"
           >
             <div className="flex flex-col w-full items-center">
-              <div className="flex flex-col bg-white rounded-md p-1 sm:p-2 border border-teal-300 mt-1 absolute w-full sm:w-2/3">
+              <div className="flex flex-col bg-white rounded-md p-1 sm:p-2 border border-teal-300 mt-1 absolute w-full sm:w-2/3 sm:max-w-4xl">
                 {Array.from(items)
                   .splice(showSecondSet ? 5 : 0, 5)
                   .map(({ Title, Year, Poster, imdbID }, i) => (
                     <div
-                      className="cursor-pointer flex md:flex items-center border-t bg-white p-0.5 rounded-md hover:shadow-sm  transition ease-in-out delay-75 hover:scale-110 hover:border-0 hover:p-1 hover:bg-slate-100 duration-150"
+                      className="cursor-pointer flex md:flex items-center border-t bg-white p-0.5 rounded-md hover:shadow-sm  transition ease-in-out delay-75 hover:scale-110 hover:border-0 hover:p-1 hover:bg-slate-100 duration-150 max-w-4xl"
                       onMouseDown={() => setImdbId(imdbID)}
                       key={i}
                     >
-                      <div className="basis-2/12 sm:basis-1/12 h-16 sm:h-20">
+                      <div className="basis-1/12 h-16 sm:h-20">
                         <img
                           src={Poster === "N/A" ? "" : Poster}
                           alt="no img"
