@@ -1,0 +1,423 @@
+// Collections
+CreateCollection({ name: "users" })
+
+CreateCollection({ name: "movies"});
+
+
+
+// Indexes
+// --------------------------------------------
+
+// user lookup index
+CreateIndex({
+  name: "users_by_username",
+  source: Collection("users"),
+  terms: [{field: ["data", "username"]}],
+  unique: true,
+  serialized: true,
+})
+
+// constraint index for list entries
+CreateIndex({
+  name: "constraint",
+  source: Collection("movies"),
+  unique: true,
+  serialized: true,
+  terms: [
+    {
+      field: ["data", "owner"]
+    },
+    {
+      field: ["data", "imdbId"]
+    }
+  ]
+})
+
+
+// ------------------------------------------ //
+//  sort indexes and lambdas for mapping them
+
+// ----------------------------------------------
+
+// sort by title asc ----------------------------
+
+CreateIndex({
+  name: "movies_by_user_sort_by_title_asc2",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "title"] },
+    { field: ["data", "score"] },
+    { field: ["data", "year"] },
+    { field: ["data", "rating"] },
+    { field: ["data", "note"] },
+    { field: ["data", "poster"] },
+    { field: ["data", "imdbId"] },
+    { field: ["data", "added"] },
+    { field: ["ref", "id"] },
+  ]
+})
+
+// sort by title desc ----------------------------
+
+CreateIndex({
+  name: "movies_by_user_sort_by_title_desc2",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "title"], reverse: true },
+    { field: ["data", "score"] },
+    { field: ["data", "year"] },
+    { field: ["data", "rating"] },
+    { field: ["data", "note"] },
+    { field: ["data", "poster"] },
+    { field: ["data", "imdbId"] },
+    { field: ["data", "added"] },
+    { field: ["ref", "id"] },
+  ]
+})
+
+Lambda("x", {
+          title: Select(0, Var("x")),
+          score: Select(1, Var("x")),
+          year: Select(2, Var("x")),
+          rating: Select(3, Var("x")),
+          note: Select(4, Var("x")),
+          poster: Select(5, Var("x")),
+          imdbId: Select(6, Var("x")),
+          added: Select(7, Var("x")),
+          id: Select(8, Var("x"))
+        })
+
+// ---------------------------------------------------
+
+// sort by score asc ---------------------------------
+
+CreateIndex({
+  name: "movies_by_user_sort_by_score_asc2",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "score"] },
+    { field: ["data", "title"] },
+    { field: ["data", "year"] },
+    { field: ["data", "rating"] },
+    { field: ["data", "note"] },
+    { field: ["data", "poster"] },
+    { field: ["data", "imdbId"] },
+    { field: ["data", "added"] },
+    { field: ["ref", "id"] },
+  ]
+})
+
+// desc --
+
+CreateIndex({
+  name: "movies_by_user_sort_by_score_desc2",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "score"], reverse: true },
+    { field: ["data", "title"] },
+    { field: ["data", "year"] },
+    { field: ["data", "rating"] },
+    { field: ["data", "note"] },
+    { field: ["data", "poster"] },
+    { field: ["data", "imdbId"] },
+    { field: ["data", "added"] },
+    { field: ["ref", "id"] },
+  ]
+})
+
+Lambda("x", {
+          title: Select(1, Var("x")),
+          score: Select(0, Var("x")),
+          year: Select(2, Var("x")),
+          rating: Select(3, Var("x")),
+          note: Select(4, Var("x")),
+          poster: Select(5, Var("x")),
+          imdbId: Select(6, Var("x")),
+          added: Select(7, Var("x")),
+          id: Select(8, Var("x"))
+        })
+
+// ---------------------------------------------------
+// sort by year asc-----------------------------------
+
+CreateIndex({
+  name: "movies_by_user_sort_by_year_asc2",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "year"] },
+    { field: ["data", "title"] },
+    { field: ["data", "score"] },
+    { field: ["data", "rating"] },
+    { field: ["data", "note"] },
+    { field: ["data", "poster"] },
+    { field: ["data", "imdbId"] },
+    { field: ["data", "added"] },
+    { field: ["ref", "id"] },
+  ]
+})
+
+// desc --
+
+CreateIndex({
+  name: "movies_by_user_sort_by_year_desc2",
+  source: Collection("movies"),
+  terms: [{field:["data", "owner"]}],
+  values: [
+    { field: ["data", "year"], reverse: true },
+    { field: ["data", "title"] },
+    { field: ["data", "score"] },
+    { field: ["data", "rating"] },
+    { field: ["data", "note"] },
+    { field: ["data", "poster"] },
+    { field: ["data", "imdbId"] },
+    { field: ["data", "added"] },
+    { field: ["ref", "id"] },
+  ]
+})
+
+Lambda("x", {
+          title: Select(1, Var("x")),
+          score: Select(2, Var("x")),
+          year: Select(0, Var("x")),
+          rating: Select(3, Var("x")),
+          note: Select(4, Var("x")),
+          poster: Select(5, Var("x")),
+          imdbId: Select(6, Var("x")),
+          added: Select(7, Var("x")),
+          id: Select(8, Var("x"))
+        })
+
+// END OF SORT INDEXES
+// ----------------------------------------------
+
+
+// ------------- Get List Udf -------------------
+
+CreateFunction({
+  name: "getList3",
+  role: "server",
+  body: Query(
+  Lambda(
+    ["username", "index", "after"],
+    Let(
+      {
+        user: Get(Match(Index("users_by_username"), Var("username"))),
+        userRef: Select("ref", Var("user")),
+        order: If(
+          Or(
+            Equals(Var("index"), "movies_by_user_sort_by_title_asc2"),
+            Equals(Var("index"), "movies_by_user_sort_by_title_desc2")
+          ),
+          [0, 1, 2],
+          If(
+            Or(
+              Equals(Var("index"), "movies_by_user_sort_by_score_asc2"),
+              Equals(Var("index"), "movies_by_user_sort_by_score_desc2")
+            ),
+            [1, 0, 2],
+            If(
+              Or(
+                Equals(Var("index"), "movies_by_user_sort_by_year_asc2"),
+                Equals(Var("index"), "movies_by_user_sort_by_year_desc2")
+              ),
+              [1, 2, 0],
+              [0, 1, 2]
+            )
+          )
+        )
+      },
+      Let(
+        {
+          pagination: If(
+            Equals(Var("after"), null),
+            Paginate(Match(Index(Var("index")), Var("userRef")), { size: 100 }),
+            Paginate(Match(Index(Var("index")), Var("userRef")), {
+              after: Var("after"),
+              size: 10
+            })
+          ),
+          movies: Select("data", Var("pagination")),
+          cursor: If(
+            ContainsPath("after", Var("pagination")),
+            Select("after", Var("pagination")),
+            null
+          ),
+          data: "ASD"
+        },
+        {
+          movies: Map(
+            Var("movies"),
+            Lambda("x", {
+              title: Select(Select(0, Var("order")), Var("x")),
+              score: Select(Select(1, Var("order")), Var("x")),
+              year: Select(Select(2, Var("order")), Var("x")),
+              rating: Select(3, Var("x")),
+              note: Select(4, Var("x")),
+              poster: Select(5, Var("x")),
+              imdbId: Select(6, Var("x")),
+              added: Select(7, Var("x")),
+              id: Select(8, Var("x"))
+            })
+          ),
+          cursor: Var("cursor")
+        }
+      )
+    )
+  )
+)
+})
+
+
+//  ---------------------- mutating operations ------------------------
+
+// Add list entry
+CreateFunction({
+  name: "addEntry",
+  role: "server",
+  body: Query(
+    Lambda(
+      ["title", "score", "year", "rating", "note", "poster", "imdbId"],
+      Create(Collection("movies"), {
+        data: {
+          title: Var("title"),
+          score: ToInteger(Var("score")),
+          year: Var("year"),
+          rating: Var("rating"),
+          note: Var("note"),
+          poster: Var("poster"),
+          imdbId: Var("imdbId"),
+          added: ToString(Now()), // format: 2019-10-02T19:34:56.789012Z
+          owner: Identity() // ref to adder.
+        }
+      })
+    )
+  )
+})
+
+// Remove list entry.
+CreateFunction({
+  name: "deleteEntry",
+  role: "server",
+  body: Query(
+  Lambda(
+    "movieId",
+    Let(
+      {
+        movieRef: Ref(Collection("movies"), Var("movieId")),
+        movieData: Select("data", Get(Var("movieRef"))),
+        movieOwnerRef: Select("owner", Var("movieData"))
+      },
+      If(
+        Equals(Var("movieOwnerRef"), CurrentIdentity()),
+        Delete(Var("movieRef")),
+        Abort("Not your entry")
+      )
+    )
+  )
+)
+})
+
+
+// Update list entry score
+CreateFunction({
+  name: "updateScore",
+  role: "server",
+  body: Query(
+  Lambda(
+    ["score", "movieId"],
+    Let(
+      {
+        movieRef: Ref(Collection("movies"), Var("movieId")),
+        movieData: Select("data", Get(Var("movieRef"))),
+        movieOwnerRef: Select("owner", Var("movieData"))
+      },
+      If(
+        Equals(Var("movieOwnerRef"), CurrentIdentity()),
+        Update(Var("movieRef"), { data: { score: Var("score") } }),
+        Abort("Not your entry")
+      )
+    )
+  )
+)
+})
+
+// Update notes
+CreateFunction({
+  name: "updateNotes",
+  role: "server",
+  body: Query(
+  Lambda(
+    ["note", "movieId"],
+    Let(
+      {
+        movieRef: Ref(Collection("movies"), Var("movieId")),
+        movieData: Select("data", Get(Var("movieRef"))),
+        movieOwnerRef: Select("owner", Var("movieData"))
+      },
+      If(
+        Equals(Var("movieOwnerRef"), CurrentIdentity()),
+        Update(Var("movieRef"), { data: { note: Var("note") } }),
+        Abort("Not your entry")
+      )
+    )
+  )
+)
+})
+
+
+// Role definition
+// Basic role for all users
+// Lets you call Udfs (defined above) and read user documents (could be restricted later to only reading your own document).
+{
+  ref: Role("MyCustomRole"),
+  ts: 1644894427980000,
+  name: "MyCustomRole",
+  privileges: [
+    {
+      resource: Collection("users"),
+      actions: {
+        read: true,
+        write: false,
+        create: false,
+        delete: false,
+        history_read: false,
+        history_write: false,
+        unrestricted_read: false
+      }
+    },
+    {
+      resource: Ref(Ref("functions"), "addEntry"),
+      actions: {
+        call: true
+      }
+    },
+    {
+      resource: Ref(Ref("functions"), "deleteEntry"),
+      actions: {
+        call: true
+      }
+    },
+    {
+      resource: Ref(Ref("functions"), "updateScore"),
+      actions: {
+        call: true
+      }
+    },
+    {
+      resource: Ref(Ref("functions"), "updateNotes"),
+      actions: {
+        call: true
+      }
+    }
+  ],
+  membership: [
+    {
+      resource: Collection("users")
+    }
+  ]
+}
