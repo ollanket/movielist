@@ -238,7 +238,7 @@ CreateFunction({
             Paginate(Match(Index(Var("index")), Var("userRef")), { size: 100 }),
             Paginate(Match(Index(Var("index")), Var("userRef")), {
               after: Var("after"),
-              size: 10
+              size: 100
             })
           ),
           movies: Select("data", Var("pagination")),
@@ -247,7 +247,6 @@ CreateFunction({
             Select("after", Var("pagination")),
             null
           ),
-          data: "ASD"
         },
         {
           movies: Map(
