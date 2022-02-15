@@ -25,7 +25,7 @@ const ListItem = ({
   setSelectedEntry
 }: Props) => {
   return (
-    <div className="flex w-full sm:h-24 h:16  border-b border-l border-r border-teal-300 overflow-visible rounded bg-white mt-0.5">
+    <div className="flex w-full sm:h-24 h-16  border-b border-l border-r border-teal-300 overflow-visible rounded bg-white mt-0.5">
       <div className="flex basis-1/12">
         <img
           src={entry.poster !== "N/A" ? entry.poster : ""}

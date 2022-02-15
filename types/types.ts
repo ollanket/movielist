@@ -16,12 +16,12 @@ export interface userAuthData {
 }
 
 export enum sortOptions {
-  "movies_by_user_sort_by_title_asc",
-  "movies_by_user_sort_by_title_desc",
-  "movies_by_user_sort_by_score_asc",
-  "movies_by_user_sort_by_score_desc",
-  "movies_by_user_sort_by_year_asc",
-  "movies_by_user_sort_by_year_desc"
+  "movies_by_user_sort_by_title_asc2",
+  "movies_by_user_sort_by_title_desc2",
+  "movies_by_user_sort_by_score_asc2",
+  "movies_by_user_sort_by_score_desc2",
+  "movies_by_user_sort_by_year_asc2",
+  "movies_by_user_sort_by_year_desc2"
 }
 
 export interface ref {

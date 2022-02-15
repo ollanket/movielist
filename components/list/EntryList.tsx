@@ -39,7 +39,7 @@ const EntryList = ({
   const sortList = async (sort: sortOptions) => {
     try {
       const res = await sendRequest(`/api/list/${username}?sort=${sort}`);
-      const data: Array<listEntry> = res.data;
+      const data: Array<listEntry> = res.data.movies;
       setList(data);
     } catch (error) {}
   };

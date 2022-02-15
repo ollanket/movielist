@@ -14,7 +14,7 @@ import SearchContent from "../../components/list/SearchContent";
 
 const List: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ list, username }) => {
+> = ({ list, username, cursor }) => {
   const { data } = useUser();
   const [listState, SetListState] = useState(list);
   const [mainItem, setMainItem] = useState<string | undefined>("");
@@ -41,9 +41,15 @@ const List: NextPage<
   );
 };
 
+interface response {
+  movies: Array<listEntry>;
+  cursor: string | null;
+}
+
 export const getServerSideProps: GetServerSideProps<{
   list: listEntry[];
   username: string | string[];
+  cursor: string | null;
 }> = async (context) => {
   try {
     const { username } = context.query;
@@ -51,29 +57,16 @@ export const getServerSideProps: GetServerSideProps<{
     if (!username) {
       throw new Error("No username in query");
     }
-    const { data }: { data: Array<listEntry> } = await serverClient.query(
-      q.Call(q.Function("getList"), [
+    const data: response = await serverClient.query(
+      q.Call(q.Function("getList2"), [
         username,
-        "movies_by_user_sort_by_title_asc"
+        "movies_by_user_sort_by_title_asc2",
+        null
       ])
     );
 
-    // const data: Array<listEntry> = [
-    //   {
-    //     title: "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
-    //     id: "320674163978142281",
-    //     score: 10,
-    //     poster:
-    //       "https://m.media-amazon.com/images/M/MV5BMTc0NTUwMTU5OV5BMl5BanBnXkFtZTcwNjAwNzQzMw@@._V1_SX300.jpg",
-    //     year: "2005",
-    //     rating: "PG",
-    //     note: "Nice Movie!",
-    //     added: "221187-2-1",
-    //     imdbId: "dasd"
-    //   }
-    // ];
     return {
-      props: { list: data, username: username }
+      props: { list: data.movies, username: username, cursor: data.cursor }
     };
   } catch (error) {
     if (error instanceof Error) {
