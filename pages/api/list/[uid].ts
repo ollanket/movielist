@@ -6,6 +6,11 @@ import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import HttpError from "../../../utils/http-error";
 import { errorHandler } from "../../../utils/error-handling";
 
+export interface response {
+  movies: Array<listEntry>;
+  cursor: Array<ref | number | string> | null;
+}
+
 export default async function getList(
   req: NextApiRequest,
   res: NextApiResponse
@@ -19,17 +24,35 @@ export default async function getList(
         StatusCodes.METHOD_NOT_ALLOWED
       );
     }
-    const {
-      data,
-      after
-    }: { data: Array<listEntry>; after: Array<ref | string> | undefined } =
-      await serverClient.query(
-        q.Call(q.Function("getList"), [
-          `${uid}`,
-          sortOptions[parseInt(sort?.toString()) || 0]
-        ])
+    let resolvedCursor;
+
+    if (cursor) {
+      const resolvedString = Buffer.from(cursor as string, "base64").toString(
+        "ascii"
       );
-    res.status(StatusCodes.OK).json({ data, after });
+      const { first, second, third } = JSON.parse(resolvedString);
+      resolvedCursor = [first, second, third];
+    }
+
+    const data: response = await serverClient.query(
+      q.Call(q.Function("getList2"), [
+        `${uid}`,
+        sortOptions[parseInt(sort?.toString()) || 0],
+        resolvedCursor ? resolvedCursor : null
+      ])
+    );
+
+    const base64 = data.cursor
+      ? Buffer.from(
+          JSON.stringify({
+            first: data.cursor[0],
+            second: data.cursor[1],
+            third: data.cursor[2]
+          })
+        ).toString("base64")
+      : null;
+
+    res.status(200).json({ data: { movies: data.movies, cursor: base64 } });
   } catch (error) {
     errorHandler(error, res);
   }
