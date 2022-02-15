@@ -321,6 +321,29 @@ CreateFunction({
 )
 })
 
+// Update notes and score
+CreateFunction({
+  name: "updateEntry",
+  role: "server",
+  body: Query(
+  Lambda(
+    ["score", "note" , "movieId"],
+    Let(
+      {
+        movieRef: Ref(Collection("movies"), Var("movieId")),
+        movieData: Select("data", Get(Var("movieRef"))),
+        movieOwnerRef: Select("owner", Var("movieData"))
+      },
+      If(
+        Equals(Var("movieOwnerRef"), CurrentIdentity()),
+        Update(Var("movieRef"), { data: { score: Var("score"), note: Var("note") } }),
+        Abort("Not your entry")
+      )
+    )
+  )
+)
+})
+
 
 // Update list entry score
 CreateFunction({
