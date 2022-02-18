@@ -60,7 +60,7 @@ const Default = () => {
             ? "Home"
             : pathname.substring(1) === "list/[username]"
             ? query.username + "'s list"
-            : " "}
+            : pathname.substring(1)}
           &nbsp;
         </span>
         <span className=" text-sm text-teal-800">page!&nbsp;</span>
