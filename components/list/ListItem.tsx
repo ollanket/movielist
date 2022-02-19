@@ -11,6 +11,7 @@ interface selectedEntry {
   title: string;
   note: string;
   score: number;
+  imdbId: string;
 }
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
   controls: boolean;
   setDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setEditDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  setInfoDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedEntry: React.Dispatch<React.SetStateAction<selectedEntry | null>>;
 }
 
@@ -26,7 +28,8 @@ const ListItem = ({
   controls,
   setDeleteDialog,
   setSelectedEntry,
-  setEditDialog
+  setEditDialog,
+  setInfoDialog
 }: Props) => {
   return (
     <div className="flex w-full sm:h-24 h-16  border-b border-l border-r border-teal-300 overflow-visible rounded bg-white mt-0.5">
@@ -58,6 +61,7 @@ const ListItem = ({
           entry={entry}
           setSelectedEntry={setSelectedEntry}
           setEditDialog={setEditDialog}
+          setInfoDialog={setInfoDialog}
         />
       </div>
     </div>
@@ -71,13 +75,15 @@ function DropDown({
   setDeleteDialog,
   entry,
   setSelectedEntry,
-  setEditDialog
+  setEditDialog,
+  setInfoDialog
 }: {
   entry: listEntry;
   controls: boolean;
   setDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedEntry: React.Dispatch<React.SetStateAction<selectedEntry | null>>;
   setEditDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  setInfoDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
     <Menu
@@ -109,6 +115,16 @@ function DropDown({
                       ? "bg-gray-100 text-gray-900 block px-4 py-2 cursor-pointer"
                       : "text-gray-700 block px-4 py-2 text-sm"
                   }
+                  onClick={() => {
+                    setSelectedEntry({
+                      id: entry.id,
+                      title: entry.title,
+                      score: entry.score,
+                      note: entry.note,
+                      imdbId: entry.imdbId
+                    });
+                    setInfoDialog(true);
+                  }}
                 >
                   <div className="flex items-center">
                     <AiOutlineInfo className=" text-lg mr-1" />
@@ -134,7 +150,8 @@ function DropDown({
                           id: entry.id,
                           title: entry.title,
                           score: entry.score,
-                          note: entry.note
+                          note: entry.note,
+                          imdbId: entry.imdbId
                         });
                         setDeleteDialog(true);
                       }}
@@ -161,9 +178,9 @@ function DropDown({
                           id: entry.id,
                           title: entry.title,
                           score: entry.score,
-                          note: entry.note
+                          note: entry.note,
+                          imdbId: entry.imdbId
                         });
-                        console.log(entry.score);
                         setEditDialog(true);
                       }}
                     >

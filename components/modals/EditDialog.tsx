@@ -32,18 +32,20 @@ const EditDialog = ({
   note
 }: Props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [Edits, setEdits] = useState({ score: 0, note: "" });
+
+  const [Edits, setEdits] = useState({ scores: score, note: "" });
 
   useEffect(() => {
-    setEdits({ score: score || 0, note: note || "" });
-  }, [score, note, setEdits, id]);
+    console.log(score);
+    setEdits({ scores: score || 0, note: note || "" });
+  }, [score, note, setEdits, id, open]);
 
   const editEntry = async () => {
     try {
       const res = await sendRequest(
         `/api/list/entry/update/${id}`,
         "PATCH",
-        JSON.stringify({ score: Edits.score, note: Edits.note }),
+        JSON.stringify({ score: Edits.scores, note: Edits.note }),
         { "Content-Type": "application/json" }
       );
       setOpen(false);
@@ -80,10 +82,10 @@ const EditDialog = ({
             <select
               className=" text-gray-700 p-1 "
               onChange={(e) => {
-                setEdits({ ...Edits, score: parseInt(e.target.value) });
+                setEdits({ ...Edits, scores: parseInt(e.target.value) });
                 console.log("Score change event");
               }}
-              value={Edits.score}
+              value={Edits.scores}
             >
               <option value={0}>Select a score</option>
               {scores.map((i, index) => (
@@ -137,7 +139,7 @@ const EditDialog = ({
               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
               onClick={() => {
                 setOpen(false);
-                setEdits({ score: 0, note: "" });
+                setEdits({ scores: 0, note: "" });
               }}
             >
               Cancel
@@ -163,7 +165,13 @@ const EditDialog = ({
       header={<Header />}
       main={
         !isLoading ? (
-          <Main />
+          error ? (
+            <p className="text-md text-gray-700 basis-6/6 flex flex-grow text-left p-1">
+              Something went wrong
+            </p>
+          ) : (
+            <Main />
+          )
         ) : (
           <LoadingBouncer style="w-full flex justify-center h-16 items-center text-teal-500" />
         )
