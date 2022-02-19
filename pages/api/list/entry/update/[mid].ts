@@ -10,7 +10,7 @@ import Joi from "joi";
 
 const schema = Joi.object({
   score: Joi.number().min(0).max(10).required(),
-  note: Joi.string().required().alphanum()
+  note: Joi.string().required()
 });
 
 const updateEntry = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -19,7 +19,6 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       query: { mid },
       body: { score, note }
     } = req;
-
     if (req.method !== "PATCH") {
       throw new HttpError(
         ReasonPhrases.METHOD_NOT_ALLOWED,

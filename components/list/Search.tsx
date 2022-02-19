@@ -126,11 +126,9 @@ const Search = ({
                         ></img>
                       </div>
                       <div className="basis-3/5 ml-3 flex justify-start">
-                        Title: {Title}
+                        {Title}
                       </div>
-                      <div className="basis-1/5 flex justify-end">
-                        Year: {Year}
-                      </div>
+                      <div className="basis-1/5 flex justify-end">{Year}</div>
                     </div>
                   ))}
                 {items.length > 5 && (

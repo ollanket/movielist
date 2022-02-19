@@ -64,7 +64,7 @@ const ListItem = ({
   );
 };
 
-export default ListItem;
+export default React.memo(ListItem);
 
 function DropDown({
   controls,

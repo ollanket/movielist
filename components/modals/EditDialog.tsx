@@ -1,8 +1,16 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState
+} from "react";
 import { useHttpClient } from "../../utils/hooks/http-hook";
 import LoadingBouncer from "../LoadingBouncer";
 import Modal from "./Modal";
 import { scores } from "../../utils/consts";
+import { MdClose } from "react-icons/md";
+import { AiOutlineEdit } from "react-icons/ai";
 
 interface Props {
   open: boolean;
@@ -24,18 +32,18 @@ const EditDialog = ({
   note
 }: Props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [Edits, setEdits] = useState({ score: score, note: note });
+  const [Edits, setEdits] = useState({ score: 0, note: "" });
 
   useEffect(() => {
-    setEdits({ score: score, note: note });
-  }, [score, note, setEdits]);
+    setEdits({ score: score || 0, note: note || "" });
+  }, [score, note, setEdits, id]);
 
   const editEntry = async () => {
     try {
       const res = await sendRequest(
         `/api/list/entry/update/${id}`,
         "PATCH",
-        { score, note },
+        JSON.stringify({ score: Edits.score, note: Edits.note }),
         { "Content-Type": "application/json" }
       );
       setOpen(false);
@@ -44,16 +52,33 @@ const EditDialog = ({
   };
 
   const Header = () => {
-    return <div>Header</div>;
+    return (
+      <>
+        {error ? (
+          <div className="flex">
+            <MdClose className="text-red-500 h-6 w-6 mr-2" />
+            <div>An Error Has Occured</div>
+          </div>
+        ) : (
+          <div className="flex">
+            <AiOutlineEdit className="text-teal-500 h-6 w-6 mr-2" />
+            <div>Editing {title}</div>
+          </div>
+        )}
+      </>
+    );
   };
 
   const Main = () => {
     return (
-      <div className="flex-col w-full">
-        <div className="flex bg-slate-50">
-          <div className="flex basis-3/6 items-center justify-center p-1">
+      <div className="flex-col w-full  border-b-2 border-teal-300">
+        <div className="flex mb-4 border-b-2 border-teal-300 pb-1">
+          <p className="text-md text-gray-700 mr-4 items-center flex p-1 pr-4 ">
+            New score
+          </p>
+          <div className="flex flex-grow justify-center items-center p-1">
             <select
-              className=" text-gray-700 border-b-2 p-1 border-teal-300"
+              className=" text-gray-700 p-1 "
               onChange={(e) => {
                 setEdits({ ...Edits, score: parseInt(e.target.value) });
                 console.log("Score change event");
@@ -68,11 +93,30 @@ const EditDialog = ({
               ))}
             </select>
           </div>
-          <p className="text-md text-gray-700 basis-3/6 flex flex-grow justify-center p-1">
-            Give new score
-          </p>
         </div>
-        <div className="flex bg-red-100 mt-4">asd</div>
+        <div className="flex">
+          <form
+            key="thisform"
+            className="w-full max-w-sm"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <div className="flex-col items-center py-2 bg-white text-lg">
+              <label htmlFor="note">
+                <p className="text-base text-gray-700 pl-1 pb-1">Note</p>
+              </label>
+              <input
+                className="appearance-none bg-transparent border-none w-full py-1 p-1 leading-tight focus:outline-none text-base"
+                id="note"
+                type="text"
+                autoComplete="off"
+                placeholder="Your note here..."
+                onChange={(e) => setEdits({ ...Edits, note: e.target.value })}
+                value={Edits.note === " " ? "" : Edits.note}
+                autoFocus
+              />
+            </div>
+          </form>
+        </div>
       </div>
     );
   };
@@ -91,7 +135,10 @@ const EditDialog = ({
             <button
               type="button"
               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                setEdits({ score: 0, note: "" });
+              }}
             >
               Cancel
             </button>
@@ -115,10 +162,10 @@ const EditDialog = ({
     <Modal
       header={<Header />}
       main={
-        isLoading ? (
-          <LoadingBouncer style="w-full flex justify-center h-16 items-center text-teal-500" />
-        ) : (
+        !isLoading ? (
           <Main />
+        ) : (
+          <LoadingBouncer style="w-full flex justify-center h-16 items-center text-teal-500" />
         )
       }
       buttons={<Buttons />}
