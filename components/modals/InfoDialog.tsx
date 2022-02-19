@@ -45,12 +45,12 @@ const InfoDialog = ({ open, setOpen, score, note, imdbId }: Props) => {
       header={
         <>
           {error ? (
-            <div className="flex">
+            <div className="flex sm:-mt-0 sm:mb-0 -mt-3 mb-3">
               <MdClose className="text-red-500 h-6 w-6 mr-2" />
               <div>An Error Has Occured</div>
             </div>
           ) : (
-            <div className="flex">
+            <div className="flex -mt-3 mb-3 sm:-mt-0 sm:mb-0">
               <AiOutlineInfo className="text-teal-500 h-6 w-6 mr-2" />
               <div className="leading-normal items-center border-b-2 border-teal-300">
                 Title: {movie?.Title}
@@ -78,8 +78,8 @@ const InfoDialog = ({ open, setOpen, score, note, imdbId }: Props) => {
                   className="flex-col w-full
             "
                 >
-                  <div className=" flex w-full">
-                    <div className="flex flex-col justify-between w-full ">
+                  <div className=" flex w-full text-left">
+                    <div className="flex flex-col justify-between  w-full">
                       <div className="p-0.5 ">
                         <p>Released: {movie.Released}</p>
                       </div>
@@ -159,7 +159,7 @@ const InfoDialog = ({ open, setOpen, score, note, imdbId }: Props) => {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <div className="flex flex-wrap p-2">
+                <div className="flex flex-wrap p-2 text-left">
                   <p className=" leading-tight">
                     {movie.Plot === "N/A" ? "" : movie.Plot}
                   </p>
