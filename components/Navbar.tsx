@@ -7,7 +7,7 @@ const Navbar = () => {
   const { data } = useUser();
 
   return (
-    <nav className="z-50 border border-teal-300 flex items-center p-1 sm:p-3 rounded-b-md bg-teal-100 sticky top-0">
+    <nav className="z-50 border border-teal-300 flex items-center p-1 sm:p-2 rounded-b-md bg-teal-100 sticky top-0">
       <div className="flex items-center  w-full">
         <div className="flex underline text-teal-800 basis-1/4">
           <Link href={data?.user ? "/personal" : "/"}>
@@ -53,14 +53,14 @@ const Default = () => {
   const { pathname, query } = useRouter();
   return (
     <>
-      <div className="flex items-baseline tracking-tight basis-2/4 justify-center">
+      <div className="sm:flex invisible items-baseline tracking-tight basis-2/4 justify-center">
         <span className=" text-sm text-teal-800">Welcome to the&nbsp;</span>
         <span className=" font-semibold text-teal-900 ">
           {pathname === "/"
             ? "Home"
             : pathname.substring(1) === "list/[username]"
             ? query.username + "'s list"
-            : " "}
+            : pathname.substring(1)}
           &nbsp;
         </span>
         <span className=" text-sm text-teal-800">page!&nbsp;</span>

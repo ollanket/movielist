@@ -79,7 +79,7 @@ const Header = ({
 
 const Main = ({ error }: { error: string | null | undefined }) => {
   return (
-    <p className="text-md text-gray-700 basis-3/6 flex flex-grow justify-center p-1">
+    <p className="text-md text-gray-700 basis-6/6 flex flex-grow text-left p-1">
       {error ? "Something Went Wrong" : "Are you sure?"}
     </p>
   );

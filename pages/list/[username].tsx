@@ -3,7 +3,7 @@ import {
   GetServerSideProps,
   InferGetServerSidePropsType
 } from "next";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { serverClient } from "../../utils/auth";
 import { query as q } from "faunadb";
 import { listEntry } from "../../types/types";

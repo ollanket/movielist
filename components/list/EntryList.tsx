@@ -4,6 +4,7 @@ import { listEntry, sortOptions } from "../../types/types";
 import { useHttpClient } from "../../utils/hooks/http-hook";
 import LoadingBouncer from "../LoadingBouncer";
 import DeleteDialog from "../modals/DeleteDialog";
+import EditDialog from "../modals/EditDialog";
 import Modal from "../modals/Modal";
 import ListItem from "./ListItem";
 
@@ -18,6 +19,8 @@ interface Props {
 interface selectedEntry {
   id: string;
   title: string;
+  note: string;
+  score: number;
 }
 
 const EntryList = ({
@@ -30,10 +33,13 @@ const EntryList = ({
   const [sortState, setSortState] = useState<sortOptions>(0);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
+  const [editDialog, setEditDialog] = useState<boolean>(false);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<selectedEntry | null>({
     title: "",
-    id: ""
+    id: "",
+    score: 0,
+    note: ""
   });
 
   const sortList = async (sort: sortOptions) => {
@@ -76,6 +82,15 @@ const EntryList = ({
 
   return (
     <>
+      <EditDialog
+        open={editDialog}
+        setOpen={setEditDialog}
+        id={selectedEntry?.id}
+        title={selectedEntry?.title}
+        refreshList={refreshList}
+        score={selectedEntry?.score}
+        note={selectedEntry?.note}
+      />
       <DeleteDialog
         open={deleteDialog}
         setOpen={setDeleteDialog}
@@ -139,6 +154,7 @@ const EntryList = ({
                 controls={controls}
                 setDeleteDialog={setDeleteDialog}
                 setSelectedEntry={setSelectedEntry}
+                setEditDialog={setEditDialog}
               />
             ))}
           </div>

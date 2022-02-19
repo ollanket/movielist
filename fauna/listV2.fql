@@ -238,7 +238,7 @@ CreateFunction({
             Paginate(Match(Index(Var("index")), Var("userRef")), { size: 100 }),
             Paginate(Match(Index(Var("index")), Var("userRef")), {
               after: Var("after"),
-              size: 10
+              size: 100
             })
           ),
           movies: Select("data", Var("pagination")),
@@ -247,7 +247,6 @@ CreateFunction({
             Select("after", Var("pagination")),
             null
           ),
-          data: "ASD"
         },
         {
           movies: Map(
@@ -315,6 +314,29 @@ CreateFunction({
       If(
         Equals(Var("movieOwnerRef"), CurrentIdentity()),
         Delete(Var("movieRef")),
+        Abort("Not your entry")
+      )
+    )
+  )
+)
+})
+
+// Update notes and score
+CreateFunction({
+  name: "updateEntry",
+  role: "server",
+  body: Query(
+  Lambda(
+    ["score", "note" , "movieId"],
+    Let(
+      {
+        movieRef: Ref(Collection("movies"), Var("movieId")),
+        movieData: Select("data", Get(Var("movieRef"))),
+        movieOwnerRef: Select("owner", Var("movieData"))
+      },
+      If(
+        Equals(Var("movieOwnerRef"), CurrentIdentity()),
+        Update(Var("movieRef"), { data: { score: Var("score"), note: Var("note") } }),
         Abort("Not your entry")
       )
     )

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { listEntry, sortOptions } from "../../types/types";
+import { listEntry } from "../../types/types";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
@@ -9,12 +9,15 @@ import { AiOutlineInfo, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 interface selectedEntry {
   id: string;
   title: string;
+  note: string;
+  score: number;
 }
 
 interface Props {
   entry: listEntry;
   controls: boolean;
   setDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedEntry: React.Dispatch<React.SetStateAction<selectedEntry | null>>;
 }
 
@@ -22,7 +25,8 @@ const ListItem = ({
   entry,
   controls,
   setDeleteDialog,
-  setSelectedEntry
+  setSelectedEntry,
+  setEditDialog
 }: Props) => {
   return (
     <div className="flex w-full sm:h-24 h-16  border-b border-l border-r border-teal-300 overflow-visible rounded bg-white mt-0.5">
@@ -53,24 +57,27 @@ const ListItem = ({
           setDeleteDialog={setDeleteDialog}
           entry={entry}
           setSelectedEntry={setSelectedEntry}
+          setEditDialog={setEditDialog}
         />
       </div>
     </div>
   );
 };
 
-export default ListItem;
+export default React.memo(ListItem);
 
 function DropDown({
   controls,
   setDeleteDialog,
   entry,
-  setSelectedEntry
+  setSelectedEntry,
+  setEditDialog
 }: {
   entry: listEntry;
   controls: boolean;
   setDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedEntry: React.Dispatch<React.SetStateAction<selectedEntry | null>>;
+  setEditDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
     <Menu
@@ -125,7 +132,9 @@ function DropDown({
                       onClick={() => {
                         setSelectedEntry({
                           id: entry.id,
-                          title: entry.title
+                          title: entry.title,
+                          score: entry.score,
+                          note: entry.note
                         });
                         setDeleteDialog(true);
                       }}
@@ -147,6 +156,16 @@ function DropDown({
                           ? "bg-gray-100 text-gray-900 block px-4 py-2 cursor-pointer"
                           : "text-gray-700 block px-4 py-2 text-sm"
                       }
+                      onClick={() => {
+                        setSelectedEntry({
+                          id: entry.id,
+                          title: entry.title,
+                          score: entry.score,
+                          note: entry.note
+                        });
+                        console.log(entry.score);
+                        setEditDialog(true);
+                      }}
                     >
                       <div className="flex items-center">
                         <AiOutlineEdit className=" text-lg mr-1" />
