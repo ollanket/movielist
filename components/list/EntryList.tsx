@@ -5,6 +5,7 @@ import { useHttpClient } from "../../utils/hooks/http-hook";
 import LoadingBouncer from "../LoadingBouncer";
 import DeleteDialog from "../modals/DeleteDialog";
 import EditDialog from "../modals/EditDialog";
+import InfoDialog from "../modals/InfoDialog";
 import Modal from "../modals/Modal";
 import ListItem from "./ListItem";
 
@@ -21,6 +22,7 @@ interface selectedEntry {
   title: string;
   note: string;
   score: number;
+  imdbId: string;
 }
 
 const EntryList = ({
@@ -34,12 +36,14 @@ const EntryList = ({
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
   const [editDialog, setEditDialog] = useState<boolean>(false);
+  const [infoDialog, setInfoDialog] = useState<boolean>(false);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<selectedEntry | null>({
     title: "",
     id: "",
     score: 0,
-    note: ""
+    note: "",
+    imdbId: ""
   });
 
   const sortList = async (sort: sortOptions) => {
@@ -82,21 +86,32 @@ const EntryList = ({
 
   return (
     <>
-      <EditDialog
-        open={editDialog}
-        setOpen={setEditDialog}
-        id={selectedEntry?.id}
-        title={selectedEntry?.title}
-        refreshList={refreshList}
+      {controls && (
+        <>
+          <EditDialog
+            open={editDialog}
+            setOpen={setEditDialog}
+            id={selectedEntry?.id}
+            title={selectedEntry?.title}
+            refreshList={refreshList}
+            score={selectedEntry?.score}
+            note={selectedEntry?.note}
+          />
+          <DeleteDialog
+            open={deleteDialog}
+            setOpen={setDeleteDialog}
+            id={selectedEntry?.id}
+            title={selectedEntry?.title}
+            refreshList={refreshList}
+          />
+        </>
+      )}
+      <InfoDialog
+        open={infoDialog}
+        setOpen={setInfoDialog}
         score={selectedEntry?.score}
         note={selectedEntry?.note}
-      />
-      <DeleteDialog
-        open={deleteDialog}
-        setOpen={setDeleteDialog}
-        id={selectedEntry?.id}
-        title={selectedEntry?.title}
-        refreshList={refreshList}
+        imdbId={selectedEntry?.imdbId}
       />
       <div className="flex w-full py-1 bg-teal-100 border rounded-t border-teal-300 text-teal-900 text-xs sm:text-base">
         <div className="flex basis-1/12 justify-center items-center">img</div>
@@ -155,6 +170,7 @@ const EntryList = ({
                 setDeleteDialog={setDeleteDialog}
                 setSelectedEntry={setSelectedEntry}
                 setEditDialog={setEditDialog}
+                setInfoDialog={setInfoDialog}
               />
             ))}
           </div>
