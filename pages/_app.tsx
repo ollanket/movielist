@@ -14,7 +14,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
   useEffect(() => {
     // Show Progressbar on navigation
-    const startLoading = () => NProgress.start();
+    const startLoading = () =>
+      NProgress.configure({ showSpinner: false }).start();
     const stopLoading = () => NProgress.done();
     Router.events.on("routeChangeStart", startLoading);
     Router.events.on("routeChangeComplete", stopLoading);
