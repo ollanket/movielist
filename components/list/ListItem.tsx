@@ -1,18 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { listEntry } from "../../types/types";
+import { listEntry, selectedEntry } from "../../types/types";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { AiOutlineInfo, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-
-interface selectedEntry {
-  id: string;
-  title: string;
-  note: string;
-  score: number;
-  imdbId: string;
-}
 
 interface Props {
   entry: listEntry;

@@ -3,7 +3,7 @@ import {
   GetServerSideProps,
   InferGetServerSidePropsType
 } from "next";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { serverClient } from "../../utils/auth";
 import { query as q } from "faunadb";
 import { listEntry } from "../../types/types";
@@ -17,9 +17,10 @@ const List: NextPage<
 > = ({ list, username, cursor }) => {
   const { data } = useUser();
   const [listState, SetListState] = useState(list);
+  const [cursorState, setCursorState] = useState(cursor);
   const [mainItem, setMainItem] = useState<string | undefined>("");
-
   const refreshList = useRef<() => Promise<void>>();
+
   return (
     <div className="flex flex-col flex-grow bg-teal-50 h-full w-full justify-center items-center">
       <div className="flex flex-col flex-grow bg-white h-full w-full max-w-screen-sm sm:max-w-screen-lg">
@@ -33,6 +34,8 @@ const List: NextPage<
           controls={data?.username === username}
           items={listState}
           setList={SetListState}
+          cursor={cursorState}
+          setCursor={setCursorState}
           username={username as string}
           setRefreshListRef={refreshList}
         />
@@ -65,8 +68,22 @@ export const getServerSideProps: GetServerSideProps<{
       ])
     );
 
+    const base64 = data.cursor
+      ? Buffer.from(
+          JSON.stringify({
+            first: data.cursor[0],
+            second: data.cursor[1],
+            third: data.cursor[2]
+          })
+        ).toString("base64")
+      : null;
+
     return {
-      props: { list: data.movies, username: username, cursor: data.cursor }
+      props: {
+        list: data.movies,
+        username: username,
+        cursor: base64
+      }
     };
   } catch (error) {
     if (error instanceof Error) {
