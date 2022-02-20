@@ -53,7 +53,7 @@ const Default = () => {
   const { pathname, query } = useRouter();
   return (
     <>
-      <div className="sm:flex invisible items-baseline tracking-tight basis-2/4 justify-center">
+      <div className="flex invisible sm:visible items-baseline tracking-tight basis-2/4 justify-center">
         <span className=" text-sm text-teal-800">Welcome to the&nbsp;</span>
         <span className=" font-semibold text-teal-900 ">
           {pathname === "/"

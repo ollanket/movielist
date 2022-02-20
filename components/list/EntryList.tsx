@@ -1,33 +1,31 @@
 import { Transition } from "@headlessui/react";
-import React, { useCallback, useEffect, useState } from "react";
-import { listEntry, sortOptions } from "../../types/types";
+import { listenerCount } from "process";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useInViewport } from "react-in-viewport";
+
+import { listEntry, selectedEntry, sortOptions } from "../../types/types";
 import { useHttpClient } from "../../utils/hooks/http-hook";
 import LoadingBouncer from "../LoadingBouncer";
 import DeleteDialog from "../modals/DeleteDialog";
 import EditDialog from "../modals/EditDialog";
 import InfoDialog from "../modals/InfoDialog";
-import Modal from "../modals/Modal";
 import ListItem from "./ListItem";
 
 interface Props {
   controls: boolean;
   items: Array<listEntry>;
+  cursor: string | null;
+  setCursor: React.Dispatch<React.SetStateAction<string | null>>;
   setList: React.Dispatch<React.SetStateAction<listEntry[]>>;
   username: string;
   setRefreshListRef: React.MutableRefObject<(() => Promise<void>) | undefined>;
 }
 
-interface selectedEntry {
-  id: string;
-  title: string;
-  note: string;
-  score: number;
-  imdbId: string;
-}
-
 const EntryList = ({
   controls,
   items,
+  cursor,
+  setCursor,
   setList,
   username,
   setRefreshListRef
@@ -49,10 +47,14 @@ const EntryList = ({
   const sortList = async (sort: sortOptions) => {
     try {
       const res = await sendRequest(`/api/list/${username}?sort=${sort}`);
-      const data: Array<listEntry> = res.data.movies;
-      setList(data);
+      const movies: Array<listEntry> = res.data.movies;
+      const cursor: string | null = res.data.cursor;
+      setCursor(cursor);
+      setList(movies);
     } catch (error) {}
   };
+
+  // Sorts
 
   const sortByTitle = async () => {
     setButtonsDisabled(true);
@@ -78,11 +80,50 @@ const EntryList = ({
     setButtonsDisabled(false);
   };
 
+  // No need to resort list when removing entries.
+
+  const handleEntryDelete = (toRemove: string) => {
+    setList(items.filter(({ id }) => id !== toRemove));
+  };
+
+  // refreshlist, used by editDialog. We refresh the list incase
+  // sort order changes as sorting is done db side
+
   const refreshList = async () => {
+    window["scrollTo"]({ top: 0, behavior: "smooth" });
     await sortList(sortState);
   };
 
   setRefreshListRef.current = refreshList;
+
+  // Load next page when reaching the bottom of the page.
+  // Could be easily changed to load when x index of list comes in viewport for seamless data fetching.
+
+  const viewPortRef = useRef<HTMLDivElement | null>(null);
+  const [cursorError, setCursorError] = useState<string | null>(null);
+
+  const { inViewport, enterCount, leaveCount } = useInViewport(
+    viewPortRef,
+    undefined,
+    { disconnectOnLeave: false },
+    {
+      onEnterViewport: async () => {
+        if (cursor === null) {
+          return;
+        }
+        try {
+          const response = await fetch(
+            `/api/list/${username}?sort=${sortState}&cursor=${cursor}`
+          );
+          const nextList = await response.json();
+          setList(items.concat(nextList.data.movies));
+          setCursor(nextList.data.cursor);
+        } catch (error) {
+          setCursorError("Error loading more entries");
+        }
+      }
+    }
+  );
 
   return (
     <>
@@ -103,6 +144,7 @@ const EntryList = ({
             id={selectedEntry?.id}
             title={selectedEntry?.title}
             refreshList={refreshList}
+            getUpdatedList={handleEntryDelete}
           />
         </>
       )}
@@ -174,13 +216,27 @@ const EntryList = ({
               />
             ))}
           </div>
-          {items.length !== 0 && (
-            <div className="flex justify-center h-4  mb-4 mt-4 items-center">
+
+          <div
+            className="flex justify-center h-4  mb-4 mt-4 items-center"
+            ref={viewPortRef}
+          >
+            {cursor && !cursorError && (
+              <LoadingBouncer style="w-full flex justify-center items-center text-teal-500" />
+            )}
+
+            {!cursor && !cursorError && (
               <span className="text-xs leading-tight text-gray-600 flex italic border-b">
-                The End
+                {items.length === 0 ? "Your List Is Empty" : "The End"}
               </span>
-            </div>
-          )}
+            )}
+
+            {cursorError && (
+              <span className="text-xs leading-tight text-gray-600 flex italic border-b">
+                cursorError
+              </span>
+            )}
+          </div>
         </div>
       </Transition>
     </>

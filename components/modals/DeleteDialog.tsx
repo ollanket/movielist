@@ -11,9 +11,17 @@ interface Props {
   id?: string | undefined;
   title?: string | undefined;
   refreshList: () => Promise<void>;
+  getUpdatedList: (toRemove: string) => void;
 }
 
-const DeleteDialog = ({ open, setOpen, id, title, refreshList }: Props) => {
+const DeleteDialog = ({
+  open,
+  setOpen,
+  id,
+  title,
+  refreshList,
+  getUpdatedList
+}: Props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const removeEntry = async () => {
@@ -23,7 +31,8 @@ const DeleteDialog = ({ open, setOpen, id, title, refreshList }: Props) => {
         "DELETE"
       );
       setOpen(false);
-      await refreshList();
+      //await refreshList();
+      getUpdatedList(id!);
     } catch (error) {}
   };
 

@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useState
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useHttpClient } from "../../utils/hooks/http-hook";
 import LoadingBouncer from "../LoadingBouncer";
 import Modal from "./Modal";
@@ -36,7 +30,6 @@ const EditDialog = ({
   const [Edits, setEdits] = useState({ scores: score, note: "" });
 
   useEffect(() => {
-    console.log(score);
     setEdits({ scores: score || 0, note: note || "" });
   }, [score, note, setEdits, id, open]);
 
@@ -83,7 +76,6 @@ const EditDialog = ({
               className=" text-gray-700 p-1 "
               onChange={(e) => {
                 setEdits({ ...Edits, scores: parseInt(e.target.value) });
-                console.log("Score change event");
               }}
               value={Edits.scores}
             >

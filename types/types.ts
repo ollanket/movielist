@@ -15,6 +15,14 @@ export interface userAuthData {
   user: boolean;
 }
 
+export interface selectedEntry {
+  id: string;
+  title: string;
+  note: string;
+  score: number;
+  imdbId: string;
+}
+
 export enum sortOptions {
   "movies_by_user_sort_by_title_asc2",
   "movies_by_user_sort_by_title_desc2",
