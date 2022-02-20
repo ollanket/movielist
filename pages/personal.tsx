@@ -16,12 +16,12 @@ const Personal: NextPage<
 > = ({ username }) => {
   return (
     <div className="flex flex-col flex-grow items-center justify-center w-full text-center p-3 h-full">
-      <h1 className=" text-6xl font-bold text-teal-800">
+      <h1 className="text-3xl sm:text-6xl font-bold text-teal-800">
         Welcome to the movielist demo site!
       </h1>
-      <p className=" mt-3 text-2xl text-teal-700">{`Welcome ${username}`}</p>
+      <p className="text-xl mt-3 sm:text-2xl text-teal-700">{`Welcome ${username}`}</p>
 
-      <div className="flex flex-col items-center justify-around max-w-4xl mt-6 sm:w-full">
+      <div className="flex flex-col items-center justify-around max-w-4xl mt-6">
         <TextLink
           href={`/list/${username}`}
           heading="Your list"
