@@ -3,6 +3,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { errorHandler } from "../../../../utils/error-handling";
 import HttpError from "../../../../utils/http-error";
 
+/*
+  omdb search is supposed to have a pagination system, but it's broken,
+  so we only get max 10 results. It also for some reason if there are too many hits
+  (most of which it is incapable to return anyways) it just wont return anything.
+*/
+
 export default async function searchMovie(
   req: NextApiRequest,
   res: NextApiResponse
